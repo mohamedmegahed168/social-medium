@@ -1,8 +1,12 @@
 "use client";
 import { motion } from "motion/react";
+import Link from "next/link";
 function Hero() {
   return (
-    <motion.section className="mt-16 relative  bg-light" id="home">
+    <motion.section
+      className="mt-16 relative  bg-light border-b border-black/50 min-h-screen"
+      id="home"
+    >
       <motion.div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div className=" px-6 md:px-10 py-12 md:py-16 font-normal">
           <h1 className="text-4xl md:text-7xl font-bold leading-tight text-primary">
@@ -14,12 +18,12 @@ function Hero() {
           <p className="mt-6 text-lg md:text-xl text-secondary max-w-lg">
             Discover stories thinking and experties.
           </p>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
+          <Link
+            href="/SignUp"
             className="mt-5 bg-primary text-white hover:bg-black inline-flex items-center gap-2 border border-black   px-4 py-2 rounded-2xl cursor-pointer transition-colors"
           >
             Start reading
-          </motion.button>
+          </Link>
         </div>
         <div className="px-6 md:px-0 flex justify-center">
           <div className="w-full max-w-md">

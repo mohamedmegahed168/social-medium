@@ -28,7 +28,10 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "app/SignUp",
+    "lib/firebase.js",
+    "lib/firebaseCheck.js"
   ],
   "exclude": ["node_modules"]
 }
