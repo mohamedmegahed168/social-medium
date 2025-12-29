@@ -9,15 +9,15 @@ function NavBar() {
     setIsOpen((prev) => !prev);
   }
   return (
-    <motion.nav className="fixed top-0 w-full h-16 ">
-      <div className="text-[var(--text-primary)] w-full flex justify-between  px-6 border-b border-gray-200 h-full items-center">
+    <motion.nav className="fixed top-0 bg-light w-full z-50 border-b border-black/50 ">
+      <div className="max-w-8xl  h-16  flex justify-between  items-center">
         <div>
-          <Link href="/" className="font-bold text-xl">
+          <Link href="#home" className="font-bold text-2xl ">
             Social Medium
           </Link>
         </div>
         <div className="hidden md:block md:flex md:gap-6">
-          <Link href="/about"> About us </Link>
+          <Link href="/#discover"> Discover </Link>
           <Link href="/contact"> Contact </Link>
           <Link href="/signIn"> Sign in </Link>
           <Link href="signUp"> Get started </Link>

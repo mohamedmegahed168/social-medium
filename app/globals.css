@@ -8,12 +8,12 @@ html {
 }
 
 @theme inline {
-  --color-primary: #17cf54;
-  --color-background-light: #ffffff;
+  --color-greenish: #17cf54;
+  --color-light: #f7f4ed;
   --color-background-dark: #112116;
-  --text-primary: #242424;
-  --text-secondary: #6b6b6b;
-  --color-surface-light: #f0f4f2;
+  --color-primary: #242424;
+  --color-secondary: #6b6b6b;
+  /*--color-surface-light: #f0f4f2;*/
   --color-surface-dark: #1c2e22;
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
@@ -37,7 +37,8 @@ body {
 h1,
 h2,
 h3,
-button {
+button,
+a {
   font-family: var(--font-heading);
   letter-spacing: 0.1;
 }
