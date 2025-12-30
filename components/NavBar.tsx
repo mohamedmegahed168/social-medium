@@ -33,8 +33,8 @@ function NavBar() {
         <div className="hidden md:block md:flex md:gap-6">
           <Link href="/#discover"> Discover </Link>
           <Link href="/contact"> Contact </Link>
-          <Link href="/signIn"> Sign in </Link>
-          <Link href="signUp"> Get started </Link>
+          <Link href="/SignIn"> Sign in </Link>
+          <Link href="/SignUp"> Get started </Link>
         </div>
         {isOpen ? (
           <X className="block md:hidden cursor-pointer" onClick={controlOpen} />
