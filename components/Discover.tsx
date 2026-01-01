@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { PenLine, Compass, Bookmark, User } from "lucide-react";
 export default function Discover() {
   return (
-    <motion.section className="  bg-light  min-h-screen" id="discover">
+    <motion.section className="  bg-[#fafafa]  min-h-screen" id="discover">
       <div className="mx-auto max-w-7xl px-6 py-10 md:px-20 md:py-5">
         <div className=" grid grid-cols-1 gap-4 md:grid md:grid-cols-2 md:gap-10 items-center">
           <div className="flex flex-col gap-6 text-center md:text-left">

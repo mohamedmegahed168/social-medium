@@ -4,7 +4,7 @@ import Link from "next/link";
 function Hero() {
   return (
     <motion.section
-      className="mt-16 relative  bg-light border-b border-black/50 min-h-screen"
+      className="mt-16 relative bg-[#f0f4f2] min-h-screen"
       id="home"
     >
       <motion.div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -85,7 +85,7 @@ function Hero() {
               />
 
               <circle
-                className="text-primary"
+                className="text-[#17cf54]"
                 cx="350"
                 cy="120"
                 r="15"
@@ -93,7 +93,7 @@ function Hero() {
                 strokeWidth="3"
               />
               <circle
-                className="text-primary"
+                className="text-[#17cf54]"
                 cx="390"
                 cy="90"
                 opacity="0.7"
@@ -102,7 +102,7 @@ function Hero() {
                 strokeWidth="3"
               />
               <circle
-                className="text-primary"
+                className="text-[#17cf54]"
                 cx="320"
                 cy="100"
                 opacity="0.5"

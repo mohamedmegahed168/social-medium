@@ -1,7 +1,39 @@
+"use client";
 import FacebookIcon from "@/components/FacebookIcon";
 import GoogleIcon from "@/components/GoogleIcon";
 import Link from "next/link";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, usersReference } from "@/lib/firebase";
+import { setDoc, doc } from "firebase/firestore";
+import { useForm } from "react-hook-form";
 export default function SignUp() {
+  interface SignUp {
+    email: string;
+    userName: string;
+    password: string;
+  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUp>();
+  async function onSubmit(data: SignUp) {
+    const { email, userName, password } = data;
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const docId = userCredentials.user.uid;
+      await setDoc(doc(usersReference, docId), {
+        userName: userName,
+        email: email,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="bg-gray-50 min-h-screen h-full flex flex-col gap-2">
       <header className="bg-white border-b border-solid border-[#dce5df] rounded-lg px-4 py-2 flex justify-between ">
@@ -39,7 +71,7 @@ export default function SignUp() {
             <div className="flex flex-col gap-4">
               <button
                 type="button"
-                className="w-full border border-[#dce5df] px-4 py-2 rounded-2xl flex items-center justify-center gap-3 hover:shadow-sm transition-shadow"
+                className="w-full cursor-pointer bg-white border border-[#dce5df] px-4 py-2 rounded-2xl flex items-center justify-center gap-3 hover:shadow-sm transition-shadow"
               >
                 <GoogleIcon />
                 <span className="text-sm sm:text-base">
@@ -48,7 +80,7 @@ export default function SignUp() {
               </button>
               <button
                 type="button"
-                className="w-full border border-[#dce5df] px-4 py-2 rounded-2xl flex items-center justify-center gap-3 hover:shadow-sm transition-shadow"
+                className="w-full cursor-pointer bg-white border border-[#dce5df] px-4 py-2 rounded-2xl flex items-center justify-center gap-3 hover:shadow-sm transition-shadow"
               >
                 <FacebookIcon />
                 <span className="text-sm sm:text-base">
@@ -65,7 +97,10 @@ export default function SignUp() {
                 </div>
               </div>
 
-              <form className="flex flex-col gap-4">
+              <form
+                className="flex flex-col gap-4"
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="email"
@@ -74,12 +109,21 @@ export default function SignUp() {
                     Email
                   </label>
                   <input
+                    {...register("email", {
+                      required: "email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email",
+                      },
+                    })}
                     type="email"
                     placeholder="name@example.com"
-                    required
                     id="email"
-                    className="resize-none overflow-hidden text-base font-light outline-none border border-[#dce5df] rounded-xl px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
+                    className="resize-none bg-white overflow-hidden text-base font-light outline-none border border-[#dce5df] rounded-xl px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
                   />
+                  {errors.email && (
+                    <p className="text-red-700">{errors.email.message}</p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-2">
                   <label
@@ -89,12 +133,21 @@ export default function SignUp() {
                     Username
                   </label>
                   <input
+                    {...register("userName", {
+                      required: "username is required",
+                      minLength: {
+                        value: 3,
+                        message: "username must be at least 3 characters",
+                      },
+                    })}
                     type="text"
                     placeholder="your username"
-                    required
                     id="userName"
-                    className="outline-none border border-[#dce5df] rounded-xl px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
+                    className="outline-none bg-white font-light border border-[#dce5df] rounded-xl px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
                   />
+                  {errors.userName && (
+                    <p className="text-red-700"> {errors.userName.message} </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-2">
                   <label
@@ -104,16 +157,25 @@ export default function SignUp() {
                     Password
                   </label>
                   <input
+                    {...register("password", {
+                      required: "password is required",
+                      minLength: {
+                        value: 6,
+                        message: "password must be at least 6 characters",
+                      },
+                    })}
                     type="password"
                     placeholder="at least 8 characters"
                     id="password"
-                    required
-                    className="rounded-xl outline-none border border-[#dce5df] px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
+                    className="font-light rounded-xl bg-white outline-none border border-[#dce5df] px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
                   />
+                  {errors.password && (
+                    <p className="text-red-700"> {errors.password.message} </p>
+                  )}
                 </div>
                 <button
                   type="submit"
-                  className="w-full px-4 py-3 bg-[var(--color-greenish)] text-white text-lg rounded-xl font-semibold transition-colors hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[var(--color-greenish)] focus:ring-opacity-30"
+                  className="cursor-pointer  px-4 py-2 bg-[var(--color-greenish)] text-white rounded-2xl transition-colors hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[var(--color-greenish)] focus:ring-opacity-30"
                 >
                   Create account
                 </button>
