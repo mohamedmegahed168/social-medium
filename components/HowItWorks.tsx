@@ -1,7 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { UserPlus, FileEdit, Compass, BookOpen } from "lucide-react";
+import {
+  BookOpen,
+  UserCheck,
+  FileEdit,
+  Rocket,
+  Globe,
+  ArrowRight,
+  Code,
+  Brain,
+  Palette,
+  FlaskConical,
+  PenTool,
+} from "lucide-react";
 
 // Social Icons
 function TwitterIcon({ className }: { className?: string }) {
@@ -46,28 +58,38 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-export default function HowItWorks() {
+export default function LandingPage() {
   const steps = [
     {
-      icon: <UserPlus className="size-10 text-[#17cf54]" />,
+      icon: <UserCheck className="size-10 text-[#17cf54]" />,
       number: 1,
-      title: "Create an account",
+      title: "Sign Up",
       description:
         "Join our community in seconds. No paywalls, just pure reading and writing access for everyone.",
     },
     {
       icon: <FileEdit className="size-10 text-[#17cf54]" />,
       number: 2,
-      title: "Craft your story",
+      title: "Create your first post",
       description:
         "Use our distraction-free editor to write, format, and publish your ideas effortlessly.",
     },
     {
-      icon: <Compass className="size-10 text-[#17cf54]" />,
+      icon: <Rocket className="size-10 text-[#17cf54]" />,
       number: 3,
-      title: "Explore perspectives",
+      title: "Explore the dashboard",
       description:
         "Curate your feed and engage with authors that spark your curiosity and broaden your mind.",
+    },
+  ];
+
+  const categories = [
+    { icon: <Code className="size-6 text-[#17cf54]" />, name: "Technology" },
+    { icon: <Brain className="size-6 text-[#17cf54]" />, name: "Mindfulness" },
+    { icon: <Palette className="size-6 text-[#17cf54]" />, name: "Design" },
+    {
+      icon: <FlaskConical className="size-6 text-[#17cf54]" />,
+      name: "Science",
     },
   ];
 
@@ -162,12 +184,74 @@ export default function HowItWorks() {
               </div>
             </div>
 
-            {/* Hero Image */}
-            <div className="mt-8 h-64 w-full rounded-xl bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative shadow-sm">
-              <div className="z-10 text-center p-8 bg-white/80 backdrop-blur-sm rounded-lg border border-white/20">
-                <span className="text-sm font-semibold tracking-widest uppercase text-[#17cf54]">
-                  Discover Stories
-                </span>
+            {/* Topics Card */}
+            <div className="mt-8 w-full rounded-3xl bg-gradient-to-br from-[#052e16] to-[#14532d] p-8 md:p-12 overflow-hidden relative shadow-2xl border border-[#1f3625]">
+              {/* Dot pattern */}
+              <div
+                className="absolute inset-0 opacity-[0.08]"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(#ffffff 1.5px, transparent 1.5px)",
+                  backgroundSize: "24px 24px",
+                }}
+              />
+              {/* Glow */}
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#17cf54] opacity-20 blur-[80px] rounded-full pointer-events-none" />
+
+              <div className="relative z-10 grid md:grid-cols-2 gap-10 items-center">
+                {/* Left Content */}
+                <div className="flex flex-col gap-6 text-left">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 w-fit border border-white/10 backdrop-blur-md">
+                    <Globe className="size-4 text-[#17cf54]" />
+                    <span className="text-xs font-bold text-white uppercase tracking-wider">
+                      Explore Content
+                    </span>
+                  </div>
+
+                  <h3 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
+                    Fuel your mind with fresh ideas.
+                  </h3>
+
+                  <p className="text-gray-300 text-lg leading-relaxed max-w-md">
+                    From coding to culture, discover stories that matter to you.
+                    Curate your personal reading list today.
+                  </p>
+
+                  <button className="w-fit group flex items-center gap-2 text-white font-bold bg-[#17cf54] hover:bg-[#12a543] px-6 py-3 rounded-lg transition-all shadow-lg shadow-green-900/20">
+                    Explore Trending Topics
+                    <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+
+                {/* Right - Categories Grid */}
+                <div className="relative flex justify-center md:justify-end">
+                  <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+                    {categories.map((category) => (
+                      <div
+                        key={category.name}
+                        className="bg-white/10 backdrop-blur-sm border border-white/5 p-4 rounded-xl hover:bg-white/20 transition-colors cursor-pointer group"
+                      >
+                        <div className="mb-2 group-hover:scale-110 transition-transform">
+                          {category.icon}
+                        </div>
+                        <p className="text-white font-bold text-sm">
+                          {category.name}
+                        </p>
+                      </div>
+                    ))}
+
+                    {/* View All Card */}
+                    <div className="col-span-2 bg-[#17cf54] p-4 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#12a543] transition-colors shadow-lg shadow-green-500/20 group">
+                      <div>
+                        <p className="text-[#052e16] font-extrabold text-sm">
+                          View all categories
+                        </p>
+                        <p className="text-[#052e16]/70 text-xs">100+ Topics</p>
+                      </div>
+                      <ArrowRight className="size-5 text-[#052e16] group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -197,9 +281,9 @@ export default function HowItWorks() {
                   key={step.number}
                   className="group relative flex flex-col items-center text-center"
                 >
-                  <div className="relative z-10 mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-[#f6f8f6] shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-md border border-[#dce5df]">
+                  <div className="relative z-10 mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-[#e8f5e9] shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg border border-[#dce5df]">
                     {step.icon}
-                    <div className="absolute -top-3 -right-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#17cf54] text-sm font-bold text-white shadow-md">
+                    <div className="absolute -top-3 -right-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#17cf54] text-sm font-bold text-white shadow-md ring-4 ring-white">
                       {step.number}
                     </div>
                   </div>
@@ -227,23 +311,47 @@ export default function HowItWorks() {
 
         {/* CTA Section */}
         <section className="bg-[#f6f8f6] py-20 px-4 md:px-10">
-          <div className="mx-auto max-w-[960px] rounded-3xl bg-white p-10 md:p-20 shadow-sm border border-[#f0f4f2]">
-            <div className="flex flex-col items-center gap-8 text-center">
-              <div className="flex flex-col gap-4">
-                <h2 className="text-3xl font-black leading-tight tracking-tight md:text-5xl text-[#111813]">
-                  Ready to share your story?
-                </h2>
-                <p className="text-lg text-[#63886f] max-w-xl mx-auto">
-                  Join thousands of writers and readers today. Your audience is
-                  waiting.
-                </p>
+          <div className="mx-auto max-w-[960px]">
+            <div className="relative overflow-hidden rounded-[2rem] bg-white border border-[#dce5df] shadow-2xl">
+              {/* Glow Effects */}
+              <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#17cf54] opacity-10 blur-[100px] rounded-full pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#17cf54] opacity-10 blur-[80px] rounded-full pointer-events-none" />
+
+              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-10 md:p-16 gap-10">
+                {/* Left Content */}
+                <div className="flex flex-col gap-6 max-w-lg text-center md:text-left">
+                  <h2 className="text-3xl md:text-5xl font-black text-[#111813] leading-[1.1] tracking-tight">
+                    Ready to share <br />
+                    <span className="text-[#17cf54]">your story?</span>
+                  </h2>
+                  <p className="text-lg text-[#63886f] font-medium">
+                    Join a community of thousands of writers and readers. Your
+                    audience is waiting for your unique voice.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-2">
+                    <Link
+                      href="/signup"
+                      className="inline-flex items-center justify-center h-14 px-8 rounded-xl bg-[#17cf54] text-white text-base font-bold hover:bg-[#12a543] transition-colors shadow-lg shadow-green-500/20"
+                    >
+                      Start Writing Now
+                    </Link>
+                    <button className="inline-flex items-center justify-center h-14 px-8 rounded-xl bg-transparent border border-[#dce5df] text-[#111813] text-base font-bold hover:bg-gray-50 transition-colors">
+                      Learn More
+                    </button>
+                  </div>
+                </div>
+
+                {/* Right - Icon Circle */}
+                <div className="hidden md:flex relative shrink-0">
+                  <div className="relative w-48 h-48 bg-[#f6f8f6] rounded-full flex items-center justify-center border-4 border-white shadow-xl">
+                    <PenTool className="size-16 text-[#17cf54]" />
+                    <div className="absolute -bottom-4 -right-4 bg-white text-[#111813] px-4 py-2 rounded-lg font-bold text-sm shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center gap-2 border border-[#f0f4f2]">
+                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      Live Editor
+                    </div>
+                  </div>
+                </div>
               </div>
-              <Link
-                href="/signup"
-                className="flex min-w-[200px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-8 bg-[#17cf54] text-white text-lg font-bold leading-normal tracking-[0.015em] hover:bg-green-600 transition-colors shadow-lg shadow-[#17cf54]/30"
-              >
-                Start Writing Now
-              </Link>
             </div>
           </div>
         </section>

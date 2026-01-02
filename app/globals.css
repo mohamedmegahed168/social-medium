@@ -4,7 +4,6 @@
 }
 html {
   scroll-behavior: smooth;
-  /* reserve space for the fixed header (approx 64px + gap) */
   scroll-padding-top: 72px;
   font-variant-ligatures: common-ligatures;
 }

@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${sourceSerif.variable} ${lusitana.variable} antialiased bg-light`}
+        className={`${inter.variable} ${sourceSerif.variable} ${lusitana.variable} antialiased`}
       >
         {children}
       </body>
