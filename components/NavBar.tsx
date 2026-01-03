@@ -81,15 +81,22 @@ function NavBar() {
             </Link>
             <Link
               className="text-sm font-medium text-gray-300 hover:text-[#17cf54] transition-colors font-sans"
-              href="#"
+              href="#gettingStarted"
             >
-              Membership
+              Getting started
             </Link>
             <Link
               className="text-sm font-medium text-gray-300 hover:text-[#17cf54] transition-colors font-sans"
-              href="#"
+              href="#discover"
             >
-              Write
+              Discover
+            </Link>
+            <Link
+              href="/Dashboard"
+              className="text-sm font-medium text-gray-300 hover:text-[#17cf54] transition-colors font-sans"
+            >
+              {" "}
+              Dashboard
             </Link>
             <Link
               className="text-sm font-medium text-gray-300 hover:text-[#17cf54] transition-colors font-sans"
@@ -101,11 +108,11 @@ function NavBar() {
 
           <div className="flex gap-3">
             <Link
-              href="/signup"
+              href="/SignUp"
               className="flex items-center justify-center rounded-full h-9 px-5 bg-[#17cf54] hover:bg-green-600 text-white text-sm font-bold font-sans tracking-wide transition-colors"
               onClick={() => setIsOpen(false)}
             >
-              Get Started
+              Sign up
             </Link>
             <button
               onClick={controlOpen}

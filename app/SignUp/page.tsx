@@ -6,18 +6,25 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, usersReference } from "@/lib/firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { FirebaseError } from "firebase/app";
 export default function SignUp() {
   interface SignUp {
     email: string;
     userName: string;
     password: string;
+    confirmPassword: string;
+    general: string;
   }
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<SignUp>();
+  const password = watch("password");
+  const router = useRouter();
   async function onSubmit(data: SignUp) {
     const { email, userName, password } = data;
     try {
@@ -31,10 +38,20 @@ export default function SignUp() {
         userName: userName,
         email: email,
       });
+      router.push("/Dashboard");
     } catch (error) {
-      console.log(error);
+      fireBaseErrors(error);
     }
   }
+  function fireBaseErrors(error: unknown) {
+    if (error instanceof FirebaseError) {
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          console.log(error);
+      }
+    }
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen h-full flex flex-col gap-2">
       <header className="bg-white border-b border-solid border-[#dce5df] rounded-lg px-4 py-2 flex justify-between ">
@@ -142,7 +159,6 @@ export default function SignUp() {
                       },
                     })}
                     type="text"
-                    autoComplete="username"
                     placeholder="your username"
                     id="userName"
                     className="outline-none bg-white font-light border border-[#dce5df] rounded-xl px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
@@ -173,6 +189,30 @@ export default function SignUp() {
                   />
                   {errors.password && (
                     <p className="text-red-700"> {errors.password.message} </p>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="text-[var(--color-secondary)]"
+                  >
+                    confirm your password
+                  </label>
+                  <input
+                    {...register("confirmPassword", {
+                      required: "please confirm your password",
+                      validate: (value) =>
+                        value === password || "password do not match",
+                    })}
+                    type="password"
+                    placeholder="confirm your password"
+                    id="confirmPassword"
+                    className="font-light rounded-xl bg-white outline-none border border-[#dce5df] px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
+                  />
+                  {errors.confirmPassword && (
+                    <p className="text-red-700">
+                      {errors.confirmPassword.message}
+                    </p>
                   )}
                 </div>
                 <button

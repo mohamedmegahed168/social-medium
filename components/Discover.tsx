@@ -2,22 +2,22 @@
 
 import { Share2, Lightbulb, Ear } from "lucide-react";
 
-export default function ValueProposition() {
+export default function Discover() {
   const features = [
     {
-      icon: <Share2 className="size-6" />,
+      icon: <Share2 className="w-5 h-5 md:w-6 md:h-6" />,
       title: "Sharing ideas",
       description:
         "Publish your perspectives to a network of curious minds waiting to engage with deep, meaningful content.",
     },
     {
-      icon: <Lightbulb className="size-6" />,
+      icon: <Lightbulb className="w-5 h-5 md:w-6 md:h-6" />,
       title: "Thinking out loud",
       description:
         "Draft, edit, and refine your internal monologue in a distraction-free environment built for flow.",
     },
     {
-      icon: <Ear className="size-6" />,
+      icon: <Ear className="w-5 h-5 md:w-6 md:h-6" />,
       title: "Hearing from others",
       description:
         "Discover stories that challenge, inspire, and move you forward, curated just for you.",
@@ -25,18 +25,22 @@ export default function ValueProposition() {
   ];
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#fcfbf9] text-[#292929] font-sans antialiased selection:bg-[#1a8917]/20 selection:text-[#136b12]">
+    <section
+      id="discover"
+      className="relative w-full min-h-screen flex flex-col items-center justify-center  scroll-smooth bg-[#fcfbf9] text-[#292929] selection:bg-[#1a8917]/20 selection:text-[#136b12] py-16 md:py-24"
+    >
       {/* Background Blurs */}
-      <div className="absolute top-0 right-0 -mr-32 -mt-32 w-[600px] h-[600px] bg-[#1a8917]/5 rounded-full blur-[100px] opacity-70 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -ml-32 -mb-32 w-[500px] h-[500px] bg-orange-100/40 rounded-full blur-[100px] opacity-70 pointer-events-none" />
+
+      <div className="absolute top-0 right-0 -mr-24 -mt-24 bg-[#1a8917]/5 w-[420px] h-[420px] md:w-[600px] md:h-[600px] rounded-full blur-[100px] opacity-70 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-[360px] h-[360px] md:w-[500px] md:h-[500px] bg-orange-100/40 rounded-full blur-[100px] opacity-70 pointer-events-none" />
 
       {/* Content */}
-      <div className="container mx-auto px-6 py-20 lg:px-12 xl:px-20 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20 py-12 md:py-20 relative z-10 text-center md:text-left max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-start">
           {/* Left Content */}
-          <div className="flex flex-col gap-12 order-2 lg:order-1">
+          <div className="flex flex-col gap-8 order-2 ">
             {/* Header */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col items-center md:items-start justify-center gap-6">
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e8f5e9]/50 border border-[#1a8917]/10 w-fit">
                 <span className="w-2 h-2 rounded-full bg-[#1a8917] animate-pulse" />
@@ -45,29 +49,29 @@ export default function ValueProposition() {
                 </span>
               </div>
 
-              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-[#292929] leading-[1.1] tracking-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#292929] leading-[1.05] tracking-tight">
                 A sanctuary for your thoughts.
               </h2>
 
-              <p className="text-lg lg:text-xl text-[#6b6b6b] font-serif leading-relaxed max-w-lg">
+              <p className="text-base md:text-lg text-[#6b6b6b] leading-relaxed max-w-xl mx-auto md:mx-0">
                 We&apos;ve stripped away the noise to help you focus on what
                 matters: the words you write and the connections you make.
               </p>
             </div>
 
             {/* Feature Cards */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 md:gap-6 ">
               {features.map((feature) => (
                 <div
                   key={feature.title}
-                  className="group relative p-6 rounded-2xl bg-white border border-[#e5e5e5] shadow-sm hover:shadow-xl hover:shadow-[#1a8917]/5 hover:border-[#1a8917]/20 transition-all duration-300 cursor-default"
+                  className="group relative p-4 md:p-5 rounded-2xl bg-white border border-[#e5e5e5] shadow-sm hover:shadow-xl hover:shadow-[#1a8917]/5 hover:border-[#1a8917]/20 transition-all duration-300 cursor-default"
                 >
                   <div className="flex gap-6 items-start">
-                    <div className="shrink-0 w-12 h-12 rounded-xl bg-[#fcfbf9] border border-[#e5e5e5] flex items-center justify-center text-[#1a8917] group-hover:scale-110 group-hover:bg-[#1a8917] group-hover:text-white transition-all duration-300">
+                    <div className="shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-[#fcfbf9] border border-[#e5e5e5] flex items-center justify-center text-[#1a8917] group-hover:scale-110 group-hover:bg-[#1a8917] group-hover:text-white transition-all duration-300">
                       {feature.icon}
                     </div>
-                    <div className="flex flex-col gap-2">
-                      <h3 className="text-xl font-bold font-serif text-[#292929] group-hover:text-[#1a8917] transition-colors">
+                    <div className="flex flex-col gap-2 ">
+                      <h3 className="text-xl font-bold  text-[#292929] group-hover:text-[#1a8917] transition-colors">
                         {feature.title}
                       </h3>
                       <p className="text-[#6b6b6b] leading-relaxed text-base">
@@ -82,9 +86,9 @@ export default function ValueProposition() {
 
           {/* Right - SVG Illustration */}
           <div className="order-1 lg:order-2 flex items-center justify-center lg:justify-end relative">
-            <div className="relative w-full max-w-[500px] aspect-square">
+            <div className="relative w-full max-w-[460px] sm:max-w-[520px] h-auto max-h-[520px]">
               <svg
-                className="w-full h-full drop-shadow-2xl animate-[float_8s_ease-in-out_infinite]"
+                className="w-full h-auto max-h-[520px] drop-shadow-2xl animate-[float_8s_ease-in-out_infinite]"
                 fill="none"
                 viewBox="0 0 500 500"
                 xmlns="http://www.w3.org/2000/svg"
@@ -331,6 +335,6 @@ export default function ValueProposition() {
           }
         }
       `}</style>
-    </div>
+    </section>
   );
 }

@@ -94,62 +94,11 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#f6f8f6] text-[#111813]">
+    <div
+      id="gettingStarted"
+      className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#f6f8f6] text-[#111813]"
+    >
       {/* Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-[#f0f4f2] bg-white/90 backdrop-blur-md px-4 py-3 md:px-10">
-        <Link href="/" className="flex items-center gap-4 text-[#111813]">
-          <div className="size-8 text-[#17cf54]">
-            <BookOpen className="size-8" />
-          </div>
-          <h2 className="text-lg font-bold leading-tight tracking-[-0.015em]">
-            BlogPlatform
-          </h2>
-        </Link>
-
-        <div className="flex flex-1 justify-end gap-8">
-          <nav className="hidden items-center gap-9 md:flex">
-            <Link
-              className="text-sm font-medium leading-normal hover:text-[#17cf54] transition-colors"
-              href="#"
-            >
-              Home
-            </Link>
-            <Link
-              className="text-sm font-medium leading-normal hover:text-[#17cf54] transition-colors"
-              href="#"
-            >
-              Explore
-            </Link>
-            <Link
-              className="text-sm font-medium leading-normal hover:text-[#17cf54] transition-colors"
-              href="#"
-            >
-              Write
-            </Link>
-            <Link
-              className="text-sm font-medium leading-normal hover:text-[#17cf54] transition-colors"
-              href="#"
-            >
-              Membership
-            </Link>
-          </nav>
-
-          <div className="flex gap-2">
-            <Link
-              href="/signup"
-              className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#17cf54] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-green-600 transition-colors"
-            >
-              <span className="truncate">Get started</span>
-            </Link>
-            <Link
-              href="/signin"
-              className="hidden md:flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f4f2] text-[#111813] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-80 transition-opacity"
-            >
-              <span className="truncate">Sign In</span>
-            </Link>
-          </div>
-        </div>
-      </header>
 
       <main className="flex-1">
         {/* Hero Section */}
@@ -244,7 +193,7 @@ export default function LandingPage() {
                     <div className="col-span-2 bg-[#17cf54] p-4 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#12a543] transition-colors shadow-lg shadow-green-500/20 group">
                       <div>
                         <p className="text-[#052e16] font-extrabold text-sm">
-                          View all categories
+                          Get Started
                         </p>
                         <p className="text-[#052e16]/70 text-xs">100+ Topics</p>
                       </div>

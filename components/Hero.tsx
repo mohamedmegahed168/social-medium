@@ -19,7 +19,7 @@ export default function ChronicleLanding() {
                   Daily curated wisdom
                 </span>
               </div>
-              {/* second component*/}
+              {/* Intro component */}
               <div>
                 <h1 className="text-5xl  sm:text-7xl font-bold tracking-tight leading-[1.1] text-white">
                   Insight without
@@ -46,14 +46,12 @@ export default function ChronicleLanding() {
                   Explore Methodology
                 </button>
               </div>
-
-              {/* fifth component */}
             </div>
           </div>
 
           {/* Right - Animated Solar System */}
           <div>
-            <div className="lg:col-span-5 relative flex justify-center items-center order-1 lg:order-2">
+            <div className=" relative flex justify-center items-center order-1 ">
               {/* Glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#17cf54]/15 blur-[60px] rounded-full pointer-events-none" />
 
