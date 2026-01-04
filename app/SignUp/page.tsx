@@ -8,24 +8,27 @@ import { setDoc, doc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { FirebaseError } from "firebase/app";
+import { useState } from "react";
 export default function SignUp() {
   interface SignUp {
     email: string;
     userName: string;
     password: string;
     confirmPassword: string;
-    general: string;
   }
 
   const {
     register,
     handleSubmit,
     watch,
+    setError,
     formState: { errors },
   } = useForm<SignUp>();
   const password = watch("password");
   const router = useRouter();
+  const [generalErrors, setGeneralErrors] = useState<string | null>(null);
   async function onSubmit(data: SignUp) {
+    setGeneralErrors(null);
     const { email, userName, password } = data;
     try {
       const userCredentials = await createUserWithEmailAndPassword(
@@ -47,8 +50,28 @@ export default function SignUp() {
     if (error instanceof FirebaseError) {
       switch (error.code) {
         case "auth/email-already-in-use":
-          console.log(error);
+          setError("email", {
+            type: "manual",
+            message: "This email is already registered",
+          });
+          break;
+        case "auth/invalid-email":
+          setError("email", {
+            type: "manual",
+            message: "Invalied email address",
+          });
+          break;
+        case "auth/network-request-failed":
+          setGeneralErrors("Network error. Please check your connection");
+          break;
+        case "auth/too-many-requests":
+          setGeneralErrors("Too many attempts. Please try again later");
+          break;
+        default:
+          setGeneralErrors("Something went wrong. Please try again");
       }
+    } else {
+      setGeneralErrors("An unexpected error occured");
     }
   }
 
@@ -119,6 +142,9 @@ export default function SignUp() {
                 className="flex flex-col gap-4"
                 onSubmit={handleSubmit(onSubmit)}
               >
+                {generalErrors && (
+                  <p className="text-red-700"> {generalErrors} </p>
+                )}
                 <div className="flex flex-col gap-2">
                   <label
                     htmlFor="email"

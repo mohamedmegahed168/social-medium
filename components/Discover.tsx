@@ -27,7 +27,7 @@ export default function Discover() {
   return (
     <section
       id="discover"
-      className="relative w-full min-h-screen flex flex-col items-center justify-center  scroll-smooth bg-[#fcfbf9] text-[#292929] selection:bg-[#1a8917]/20 selection:text-[#136b12] py-16 md:py-24"
+      className="rounded-2xl shadow-xl relative w-full min-h-screen flex flex-col items-center justify-center  scroll-smooth bg-[#fcfbf9] text-[#292929] selection:bg-[#1a8917]/20 selection:text-[#136b12] py-16 md:py-24"
     >
       {/* Background Blurs */}
 

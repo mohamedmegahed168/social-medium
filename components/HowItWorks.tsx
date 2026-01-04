@@ -96,7 +96,7 @@ export default function LandingPage() {
   return (
     <div
       id="gettingStarted"
-      className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#f6f8f6] text-[#111813]"
+      className=" rounded-2xl relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#f6f8f6] text-[#111813]"
     >
       {/* Header */}
 

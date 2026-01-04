@@ -21,8 +21,8 @@ export default function BlogDashboard() {
     { name: "Culture", active: false },
     { name: "Productivity", active: false },
   ];
-
-  const articles = [
+  const articles = [];
+  /* const articles = [
     {
       author: {
         name: "Jane Doe",
@@ -90,7 +90,7 @@ export default function BlogDashboard() {
       memberOnly: false,
       image: null,
     },
-  ];
+  ];*/
 
   const trending = [
     {
@@ -139,7 +139,7 @@ export default function BlogDashboard() {
   ];
 
   return (
-    <div className="bg-[#fdfbf7] text-[#222222] font-serif antialiased flex flex-col min-h-screen selection:bg-[#eef5f0] selection:text-[#2d5e40]">
+    <div className="bg-[#fdfbf7] text-[#222222] flex flex-col min-h-screen selection:bg-[#eef5f0] selection:text-[#2d5e40]">
       {/* Navbar */}
       <nav className="sticky top-0 z-50 w-full bg-[#fdfbf7]/95 backdrop-blur-md border-b border-[#e0e0e0]">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4 md:px-10">
@@ -188,7 +188,7 @@ export default function BlogDashboard() {
           {/* Right Side */}
           <div className="flex items-center gap-4 sm:gap-6">
             <Link
-              href="/write"
+              href="/Write"
               className="flex items-center gap-2 text-[#6b6b6b] hover:text-[#222222] transition-colors"
             >
               <SquarePen className="size-6" strokeWidth={1.5} />
@@ -224,7 +224,7 @@ export default function BlogDashboard() {
         <main className="w-full max-w-[760px] flex-1 px-4 md:px-10 py-8 lg:border-r border-[#e0e0e0]">
           {/* Tabs */}
           <div className="sticky top-16 z-40 bg-[#fdfbf7]/95 backdrop-blur-sm -mx-4 px-4 md:-mx-10 md:px-10 pb-4 pt-2 border-b border-[#e0e0e0] mb-8">
-            <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+            <div className="flex gap-3 overflow-x-hidden no-scrollbar pb-1">
               {tabs.map((tab) => (
                 <button
                   key={tab.name}
@@ -242,86 +242,90 @@ export default function BlogDashboard() {
 
           {/* Articles */}
           <div className="flex flex-col gap-10">
-            {articles.map((article, index) => (
-              <article
-                key={index}
-                className={`group flex ${
-                  article.image ? "flex-col sm:flex-row" : ""
-                } gap-8 items-start justify-between pb-10 border-b border-[#e0e0e0] last:border-0 cursor-pointer`}
-              >
-                <div className="flex flex-1 flex-col gap-2.5">
-                  {/* Author Info */}
-                  <div className="flex items-center gap-2 mb-1">
-                    <div
-                      className="bg-center bg-no-repeat bg-cover rounded-full size-6 ring-2 ring-white"
-                      style={{
-                        backgroundImage: `url("${article.author.avatar}")`,
-                      }}
-                    />
-                    <span className="text-sm font-semibold text-[#222222]">
-                      {article.author.name}
-                    </span>
-                    {article.publication && (
-                      <>
-                        <span className="text-sm text-[#6b6b6b]">in</span>
-                        <span className="text-sm font-semibold text-[#222222]">
-                          {article.publication}
-                        </span>
-                      </>
-                    )}
-                    <span className="text-sm text-[#6b6b6b]">
-                      · {article.date}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h2 className="text-2xl font-bold leading-tight tracking-tight group-hover:text-[#2d5e40] transition-colors text-[#222222] font-serif">
-                    {article.title}
-                  </h2>
-
-                  {/* Description */}
-                  <p className="text-[#6b6b6b] text-base font-sans line-clamp-2 leading-relaxed">
-                    {article.description}
-                  </p>
-
-                  {/* Footer */}
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center gap-3">
-                      <span className="rounded-full bg-[#f4f1ea] px-3 py-1 text-xs font-medium text-[#222222] font-sans">
-                        {article.tag}
+            {articles.length === 0 ? (
+              <article> No articles where found </article>
+            ) : (
+              articles.map((article, index) => (
+                <article
+                  key={index}
+                  className={`group flex ${
+                    article.image ? "flex-col sm:flex-row" : ""
+                  } gap-8 items-start justify-between pb-10 border-b border-[#e0e0e0] last:border-0 cursor-pointer`}
+                >
+                  <div className="flex flex-1 flex-col gap-2.5">
+                    {/* Author Info */}
+                    <div className="flex items-center gap-2 mb-1">
+                      <div
+                        className="bg-center bg-no-repeat bg-cover rounded-full size-6 ring-2 ring-white"
+                        style={{
+                          backgroundImage: `url("${article.author.avatar}")`,
+                        }}
+                      />
+                      <span className="text-sm font-semibold text-[#222222]">
+                        {article.author.name}
                       </span>
-                      <span className="text-xs text-[#6b6b6b] font-sans">
-                        {article.readTime}
-                      </span>
-                      {article.memberOnly && (
-                        <Star className="size-3.5 text-yellow-500 fill-yellow-500" />
+                      {article.publication && (
+                        <>
+                          <span className="text-sm text-[#6b6b6b]">in</span>
+                          <span className="text-sm font-semibold text-[#222222]">
+                            {article.publication}
+                          </span>
+                        </>
                       )}
+                      <span className="text-sm text-[#6b6b6b]">
+                        · {article.date}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-3 text-[#6b6b6b]">
-                      <button className="hover:text-[#2d5e40] transition-colors">
-                        <Bookmark className="size-5" />
-                      </button>
-                      <button className="hover:text-red-500 transition-colors">
-                        <MinusCircle className="size-5" />
-                      </button>
-                      <button className="hover:text-[#222222] transition-colors">
-                        <MoreHorizontal className="size-5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Image */}
-                {article.image && (
-                  <div className="w-full sm:w-[160px] aspect-[16/10] sm:aspect-square shrink-0 bg-gray-100 rounded-xl overflow-hidden shadow-sm">
-                    <div
-                      className="w-full h-full bg-center bg-no-repeat bg-cover transform transition-transform duration-700 group-hover:scale-105"
-                      style={{ backgroundImage: `url("${article.image}")` }}
-                    />
+                    {/* Title */}
+                    <h2 className="text-2xl font-bold leading-tight tracking-tight group-hover:text-[#2d5e40] transition-colors text-[#222222] font-serif">
+                      {article.title}
+                    </h2>
+
+                    {/* Description */}
+                    <p className="text-[#6b6b6b] text-base font-sans line-clamp-2 leading-relaxed">
+                      {article.description}
+                    </p>
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="flex items-center gap-3">
+                        <span className="rounded-full bg-[#f4f1ea] px-3 py-1 text-xs font-medium text-[#222222] font-sans">
+                          {article.tag}
+                        </span>
+                        <span className="text-xs text-[#6b6b6b] font-sans">
+                          {article.readTime}
+                        </span>
+                        {article.memberOnly && (
+                          <Star className="size-3.5 text-yellow-500 fill-yellow-500" />
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 text-[#6b6b6b]">
+                        <button className="hover:text-[#2d5e40] transition-colors">
+                          <Bookmark className="size-5" />
+                        </button>
+                        <button className="hover:text-red-500 transition-colors">
+                          <MinusCircle className="size-5" />
+                        </button>
+                        <button className="hover:text-[#222222] transition-colors">
+                          <MoreHorizontal className="size-5" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                )}
-              </article>
-            ))}
+
+                  {/* Image */}
+                  {article.image && (
+                    <div className="w-full sm:w-[160px] aspect-[16/10] sm:aspect-square shrink-0 bg-gray-100 rounded-xl overflow-hidden shadow-sm">
+                      <div
+                        className="w-full h-full bg-center bg-no-repeat bg-cover transform transition-transform duration-700 group-hover:scale-105"
+                        style={{ backgroundImage: `url("${article.image}")` }}
+                      />
+                    </div>
+                  )}
+                </article>
+              ))
+            )}
           </div>
         </main>
 
