@@ -2,6 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../Hooks/hooks";
+import { usePublish } from "../Hooks/UsePublish";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -13,7 +16,7 @@ import {
   FolderOpen,
 } from "lucide-react";
 
-interface PostForm {
+interface postData {
   title: string;
   content: string;
 }
@@ -28,6 +31,9 @@ const categories = [
 ];
 
 export default function WritePage() {
+  const router = useRouter();
+  const { user, loading, userData } = useAuth();
+  const { publishArticle, error: publishError } = usePublish();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [wordCount, setWordCount] = useState(0);
   const [coverImage, setCoverImage] = useState<string | null>(null);
@@ -42,10 +48,15 @@ export default function WritePage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<PostForm>();
+  } = useForm<postData>();
 
   // Watch content for word count
   const content = watch("content", "");
+  useEffect(() => {
+    if (!user && !loading) {
+      router.push("/SignIn");
+    }
+  });
 
   useEffect(() => {
     const words = content.trim().split(/\s+/).filter(Boolean).length;
@@ -71,22 +82,31 @@ export default function WritePage() {
   }
 
   // Handle publish
-  async function onSubmit(data: PostForm) {
+  async function onSubmit(data: postData) {
     if (!selectedCategory) {
       alert("Please select a category");
       return;
     }
+    if (!user || !userData) return;
 
-    console.log({
-      ...data,
-      category: selectedCategory,
-      coverImage,
-      wordCount,
-    });
+    const success = await publishArticle(
+      data.title,
+      data.content,
+      user?.uid,
+      userData?.userName
+    );
+    if (success) {
+      router.push("/Dashboard");
+    }
 
     // TODO: Submit to Firebase
   }
-
+  if (loading) {
+    return <p> Loading </p>;
+  }
+  if (!user) {
+    return null;
+  }
   return (
     <div className="bg-[#f6f8f6] text-[#111813] font-serif antialiased min-h-screen flex flex-col transition-colors duration-200">
       {/* Header */}
@@ -187,6 +207,7 @@ export default function WritePage() {
           </div>
 
           {/* Title */}
+          {userData?.userName && <p> {userData.userName} </p>}
           <div className="relative group">
             <textarea
               {...register("title", {

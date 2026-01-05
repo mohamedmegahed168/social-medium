@@ -2,7 +2,7 @@
 
 import { ArrowRight, Sparkles } from "lucide-react";
 
-export default function ChronicleLanding() {
+export default function Hero() {
   return (
     <div className="relative bg-[#1c2e22] w-full text-white mt-16 overflow-x-hidden flex flex-col min-h-screen">
       <main className="w-full px-6 sm:px-20  flex justify-center py-12  ">
