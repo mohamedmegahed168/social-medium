@@ -39,7 +39,7 @@ export default function BlogDashboard() {
     { name: "Productivity", active: false },
   ];
   const [articles, setArticles] = useState<Article[]>([]);
-  const { user, loading, data, error } = useAuth<userProfile>();
+  const { user, loading, userData, error } = useAuth();
   useEffect(() => {
     if (!user && !loading) {
       router.push("/SignIn");
@@ -122,7 +122,7 @@ export default function BlogDashboard() {
       {/* Navbar */}
       <DashboardNav />
       {/* Main Content */}
-      <p> {`Hello, ${data?.userName}`}</p>
+      <p> {`Hello, ${userData?.userName}`}</p>
       <div className="flex flex-1 justify-center w-full max-w-[1400px] mx-auto">
         {/* Feed */}
         <main className="w-full max-w-[760px] flex-1 px-4 md:px-10 py-8 lg:border-r border-[#e0e0e0]">

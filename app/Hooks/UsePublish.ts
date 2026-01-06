@@ -4,18 +4,27 @@ import { addDoc, serverTimestamp } from "firebase/firestore";
 
 export function usePublish() {
   const [error, setError] = useState<string | null>(null);
-  async function publishArticle(
-    title: string,
-    content: string,
-    uid: string,
-    userName: string
-  ) {
+  interface postData {
+    title: string;
+    content: string;
+    uid: string;
+    topics: string[];
+    userName: string;
+  }
+  async function publishArticle({
+    title,
+    content,
+    uid,
+    topics,
+    userName,
+  }: postData) {
     try {
       await addDoc(articlesReferecne, {
         title: title,
         content: content,
         authorId: uid,
         authorName: userName,
+        topics: topics,
         createdAt: serverTimestamp(),
         likesCount: 0,
       });
