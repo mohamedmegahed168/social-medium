@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Search, SquarePen, Bell } from "lucide-react";
 export default function DashboardNav() {
   return (
-    <nav className=" z-50 w-full w-full bg-[#fdfbf7]/95 backdrop-blur-md border-b border-[#e0e0e0]">
+    <nav className=" sticky top-0 z-50 w-full w-full bg-[#fdfbf7]/95 backdrop-blur-md border-b border-[#e0e0e0]">
       <div className=" px-4 md:px-0 h-16 mx-auto max-w-7xl flex  items-center justify-between ">
         {/* Left Side */}
         <div className="flex items-center gap-6">

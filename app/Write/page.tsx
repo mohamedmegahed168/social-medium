@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useAuth } from "../Hooks/hooks";
 import { usePublish } from "../Hooks/UsePublish";
 import { useRouter } from "next/navigation";
-
+import { Check, PlusIcon } from "lucide-react";
 // 1. Define the Shape of your Form Data
 interface PostFormData {
   title: string;
@@ -63,7 +63,6 @@ export default function NewPostEditor() {
     if (watchedTitle?.length > 0) progress += 25;
     if (watchedContent?.length > 100) progress += 25; // Roughly 100 chars
     if (watchedTopics?.length > 0) progress += 25;
-    // Assuming 25% for cover image (mocked for now)
     return progress;
   };
 
@@ -142,12 +141,13 @@ export default function NewPostEditor() {
           >
             Publish
           </button>
-          <div className="ml-2 size-9 rounded-full bg-gray-200 overflow-hidden border border-gray-100 dark:border-gray-700">
-            <img
-              alt="User Avatar"
-              className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYJdyfnBl4jbMFvebGM6RJOfc4SzMA9PW1fVn5Qp7hRJCYZWqihfXyeOxOmqdFPxQJWK6cG13ZBdREOXinu5bLlf3ZIfwMIMjgkbiW8CyptwQd1VX6lwJ_O9UmeBAOiz4BHwU6ATo3l_OLTxpAHjJLEDx7ZPk1IVTD_dn7lbh1NoO-BPyJ1m_NJ-MBYhoyTU9rkRsvWavdVwuRMMX_BSPFZtNQeP4vPwUFBUsv6YiQNkSbNeXdA29-_J8L77R0PPNIlJrcwNXtGew"
-            />
+          <div className="ml-2 bg-greenish flex items-center justify-center size-9 rounded-full bg-gray-200 overflow-hidden border border-gray-100 dark:border-gray-700">
+            {userData?.userName && (
+              <p className="text-white">
+                {" "}
+                {userData.userName.charAt(0).toUpperCase()}{" "}
+              </p>
+            )}
           </div>
         </div>
       </header>
@@ -189,18 +189,13 @@ export default function NewPostEditor() {
                 </div>
 
                 {/* AUTHOR & SUBTITLE */}
-                <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 border-b border-gray-200">
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col"></div>
-                  </div>
-                </div>
               </div>
 
               {/* TOOLBAR (Sticky) */}
-              <div className="sticky top-[69px] z-40 bg-white/95 dark:bg-[#15231a]/95 backdrop-blur-md border-b border-gray-300 px-8 sm:px-12 py-3 transition-all w-full shadow-[0_4px_20px_-4px_rgba(0,0,0,0.02)]">
+              <div className=" bg-white/95 dark:bg-[#15231a]/95 backdrop-blur-md border-b border-gray-300 px-8 sm:px-12 py-3 transition-all w-full shadow-[0_4px_20px_-4px_rgba(0,0,0,0.02)]">
                 <div className="max-w-4xl mx-auto flex gap-1 items-center justify-between">
                   {/* Word Count */}
-                  <span className="rounded-md text-sm text-secondary  tabular-nums hidden sm:block bg-gray-50 dark:bg-white/5 px-3 py-2 rounded border-b border-gray-300">
+                  <span className="rounded-md text-sm text-secondary  hidden sm:block bg-gray-50 dark:bg-white/5 px-3 py-2 rounded border-b border-gray-300">
                     {watchedContent
                       ? watchedContent.trim().split(/\s+/).length
                       : 0}
@@ -233,36 +228,10 @@ export default function NewPostEditor() {
                 </div>
               </div>
             </div>
-
-            {/* ADD IMAGE FOOTER */}
-            <div className="relative group w-full bg-gray-50/50 dark:bg-white/5 border-t border-gray-300 p-8 flex flex-col items-center justify-center gap-4 transition-colors hover:bg-gray-50 dark:hover:bg-white/10">
-              <div className="flex flex-col items-center justify-center gap-2 text-center">
-                <div className="size-20 rounded-2xl bg-white dark:bg-gray-800 shadow-sm border border-gray-300 flex items-center justify-center text-primary mb-2 group-hover:scale-110 transition-transform">
-                  <span className="material-symbols-outlined text-[24px]">
-                    add photo
-                  </span>
-                </div>
-                <h3 className="text-sm font-bold font-sans text-text-main">
-                  Add a cover image
-                </h3>
-                <p className="text-xs text-text-secondary font-sans max-w-xs">
-                  Enhance your story with a visual header. Recommended size:
-                  1600x840px
-                </p>
-              </div>
-              <button
-                type="button"
-                className="mt-2 px-5 py-2 rounded-full bg-white dark:bg-gray-800 border border-border-color text-sm font-medium text-text-main shadow-sm hover:shadow hover:border-primary/50 transition-all"
-              >
-                Upload Image
-              </button>
-              <input className="hidden" type="file" />
-            </div>
           </div>
-
           {/* RIGHT COLUMN: SIDEBAR */}
           <div className="lg:col-span-4 relative">
-            <div className="sticky top-24 flex flex-col gap-6">
+            <div className=" flex flex-col gap-6">
               {/* PUBLISHING STATUS CARD */}
               <div className="p-6 rounded-xl border border-gray-200 bg-white dark:bg-white/5 shadow-sm">
                 <h3 className="text-sm font-bold text-primary mb-4 uppercase tracking-wider flex items-center justify-between">
@@ -273,9 +242,9 @@ export default function NewPostEditor() {
                 </h3>
                 <div className="space-y-3.5">
                   {/* Checklist Item: Title */}
-                  <div className="flex items-center justify-between text-sm group cursor-pointer">
+                  <div className="flex items-center justify-between text-sm group ">
                     <label
-                      className={`flex items-center gap-3 transition-colors cursor-default ${
+                      className={`flex items-center gap-3 transition-colors  ${
                         watchedTitle ? "text-primary" : "text-secondary"
                       }`}
                     >
@@ -283,38 +252,47 @@ export default function NewPostEditor() {
                         type="checkbox"
                         readOnly
                         checked={!!watchedTitle}
-                        className={`
-                      size-5 rounded border-gray-300 text-primary focus:ring-0 focus:ring-offset-0 cursor-default transition-all
-                    ${
-                      watchedTitle
-                        ? "bg-primary border-primary"
-                        : "bg-transparent"
-                    }
-                    `}
-                      />{" "}
+                        className="peer sr-only"
+                      />
+                      <div
+                        className={`w-5 h-5  rounded-full flex items-center justify-center ${
+                          watchedTitle
+                            ? "bg-greenish border-none"
+                            : "bg-white border border-gray-300"
+                        }`}
+                      >
+                        {watchedTitle && <Check className="text-white " />}
+                      </div>
                       Title provided{" "}
                     </label>{" "}
                   </div>
-                  {/* Checklist Item: Image (Mocked) */}
-
                   {/* Checklist Item: Word Count */}
-                  <div className="flex items-center justify-between text-sm group cursor-pointer">
+                  <div className="flex items-center justify-between text-sm group ">
                     <label
                       className={`flex items-center gap-3 transition-colors ${
                         hasEnoughContent ? "text-primary" : "text-secondary"
                       }`}
                     >
                       <input
-                        className="size-5 rounded border-gray-300 text-primary focus:ring-0 focus:ring-offset-0 cursor-default transition-all"
+                        className="peer sr-only"
                         type="checkbox"
                         readOnly
                         checked={hasEnoughContent}
                       />
+                      <div
+                        className={`w-5 h-5  rounded-full flex items-center justify-center ${
+                          hasEnoughContent
+                            ? "bg-greenish border-none"
+                            : "bg-white border border-gray-300"
+                        }`}
+                      >
+                        {hasEnoughContent && <Check className="text-white " />}
+                      </div>
                       At least 100 chars
                     </label>
                   </div>
                   {/* Checklist Item: Topics */}
-                  <div className="flex items-center justify-between text-sm group cursor-pointer">
+                  <div className="flex items-center justify-between text-sm group c">
                     <label
                       className={`flex items-center gap-3 transition-colors ${
                         topicChecker ? "text-primary" : "text-secondary"
@@ -322,17 +300,26 @@ export default function NewPostEditor() {
                     >
                       <input
                         type="checkbox"
-                        className={`size-5 material-symbols-outlined text-[20px] rounded border-gray-300 text-primary focus:ring-0 focus:ring-offset-0 cursor-default transition-all`}
+                        className="peer sr-only"
                         checked={topicChecker}
                         readOnly
                       />
+                      <div
+                        className={`w-5 h-5  rounded-full flex items-center justify-center ${
+                          topicChecker
+                            ? "bg-greenish border-none"
+                            : "bg-white border border-gray-300"
+                        }`}
+                      >
+                        {topicChecker && <Check className="text-white " />}
+                      </div>
                       Topic selected
                     </label>
                   </div>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mt-6 pt-5 border-t border-border-color">
+                <div className="mt-6 pt-5 border-t border-gray-300">
                   <div className="flex justify-between items-end mb-2">
                     <span className="text-xs font-semibold text-text-main">
                       Progress
@@ -343,7 +330,7 @@ export default function NewPostEditor() {
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-1.5 dark:bg-gray-700 overflow-hidden">
                     <div
-                      className="bg-primary h-1.5 rounded-full transition-all duration-500"
+                      className="bg-greenish h-1.5 rounded-full transition-all duration-500"
                       style={{ width: `${currentProgress}%` }}
                     ></div>
                   </div>
@@ -355,9 +342,8 @@ export default function NewPostEditor() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2 text-text-main">
                     <span className="material-symbols-outlined text-[20px] text-primary">
-                      category
+                      Topics
                     </span>
-                    <h3 className="text-base font-bold font-sans">Topics</h3>
                   </div>
                   <button
                     type="button"
@@ -366,7 +352,7 @@ export default function NewPostEditor() {
                     Manage
                   </button>
                 </div>
-                <p className="text-sm text-text-secondary mb-5 leading-snug">
+                <p className="text-sm text-secondary mb-5 leading-snug">
                   Select up to 3 topics to help readers find your story.
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -377,17 +363,20 @@ export default function NewPostEditor() {
                         key={topic}
                         type="button"
                         onClick={() => toggleTopic(topic)}
-                        className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all cursor-pointer border ${
+                        className={`group flex items-center  gap-1.5 px-3 py-1.5 rounded-md transition-all cursor-pointer border ${
                           isSelected
-                            ? "bg-primary/10 hover:bg-primary/20 border-primary/20"
-                            : "bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 border-gray-200"
+                            ? "bg-greenish/10 hover:bg-greenish/20 border-primary/20"
+                            : " dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 border-gray-200"
                         }`}
                       >
                         <span
-                          className={`text-sm font-medium font-sans ${
-                            isSelected ? "text-primary" : "text-secondary"
+                          className={`text-sm flex items-center justify-center gap-2 font-medium ${
+                            isSelected ? "text-greenish" : "text-secondary"
                           }`}
                         >
+                          <Check
+                            className={`${isSelected ? "size-4" : "hidden"}`}
+                          />
                           {topic}
                         </span>
                       </button>
@@ -396,31 +385,13 @@ export default function NewPostEditor() {
 
                   <button
                     type="button"
-                    className="group flex items-center gap-1 px-2 py-1.5 rounded-md text-text-secondary hover:text-primary transition-colors cursor-pointer border border-transparent hover:border-primary/20 border-dashed"
+                    className="group flex items-center gap-1 px-2 py-1.5 rounded-md text-secondary hover:text-primary transition-colors cursor-pointer border border-transparent hover:border-primary/20 "
                   >
-                    <span className="material-symbols-outlined text-[18px]">
+                    <span className="flex justify-center items-center gap-2 ">
+                      <PlusIcon className="size-5" />
                       add new
                     </span>
                   </button>
-                </div>
-              </div>
-
-              {/* SEO SETTINGS */}
-              <div className="p-6 rounded-xl border border-gray-200 bg-white dark:bg-white/5 shadow-sm opacity-80 hover:opacity-100 transition-all cursor-pointer group">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-text-main">
-                    <div className="bg-gray-100 dark:bg-white/10 p-1.5 rounded-lg group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">
-                        search
-                      </span>
-                    </div>
-                    <h3 className="text-base font-bold font-sans">
-                      SEO Settings
-                    </h3>
-                  </div>
-                  <span className="material-symbols-outlined text-text-secondary group-hover:translate-x-1 transition-transform">
-                    chevron_right
-                  </span>
                 </div>
               </div>
             </div>

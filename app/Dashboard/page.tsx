@@ -2,26 +2,27 @@
 
 import Link from "next/link";
 import DashboardNav from "@/components/DashboardNav";
+import HandleLikes from "@/components/HandleLikes";
 import {
   Bookmark,
   MinusCircle,
   MoreHorizontal,
   TrendingUp,
-  Star,
+  ThumbsUp,
+  Hand,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../Hooks/hooks";
-
+import { useGetArticles } from "../Hooks/UseGetArticles";
+import { useTrendingArticles } from "../Hooks/UseTrendingArticles";
 interface userProfile {
   userName: string;
 }
 export default function BlogDashboard() {
   const router = useRouter();
   interface Article {
-    author: {
-      name: string;
-    };
+    authorName: string;
     title: string;
     content: string;
     readTime: string;
@@ -31,15 +32,18 @@ export default function BlogDashboard() {
     createdAt: Date;
   }
   const tabs = [
-    { name: "For You", active: true },
-    { name: "Following", active: false },
-    { name: "Technology", active: false },
-    { name: "Design", active: false },
-    { name: "Culture", active: false },
-    { name: "Productivity", active: false },
+    "All",
+    "My Articles",
+    "Technology",
+    "Design",
+    "Culture",
+    "Productivity",
   ];
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [selectedTab, setSelectedTab] = useState<string | null>("All");
   const { user, loading, userData, error } = useAuth();
+  const { articles } = useGetArticles(selectedTab, user?.uid);
+  const trendingArticles = useTrendingArticles();
+
   useEffect(() => {
     if (!user && !loading) {
       router.push("/SignIn");
@@ -122,25 +126,28 @@ export default function BlogDashboard() {
       {/* Navbar */}
       <DashboardNav />
       {/* Main Content */}
-      <p> {`Hello, ${userData?.userName}`}</p>
-      <div className="flex flex-1 justify-center w-full max-w-[1400px] mx-auto">
+      <div className="flex flex-1 justify-center w-full max-w-7xl mx-auto">
         {/* Feed */}
-        <main className="w-full max-w-[760px] flex-1 px-4 md:px-10 py-8 lg:border-r border-[#e0e0e0]">
+        <main className="w-full max-w-7xl flex-1 px-4 md:px-10 py-8 lg:border-r border-[#e0e0e0]">
           {/* Tabs */}
           <div className="sticky top-16 z-40 bg-[#fdfbf7]/95 backdrop-blur-sm -mx-4 px-4 md:-mx-10 md:px-10 pb-4 pt-2 border-b border-[#e0e0e0] mb-8">
-            <div className="flex gap-3 overflow-x-hidden no-scrollbar pb-1">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.name}
-                  className={`shrink-0 flex items-center justify-center rounded-full px-4 py-1.5 transition-all ${
-                    tab.active
-                      ? "bg-[#222222] text-white shadow-sm"
-                      : "bg-[#f4f1ea] border border-transparent hover:border-gray-300 text-[#6b6b6b] hover:text-[#222222]"
-                  }`}
-                >
-                  <span className="text-sm font-medium">{tab.name}</span>
-                </button>
-              ))}
+            <div className="flex items-center justify-center sm:justify-start gap-3 flex-wrap overflow-x-hidden no-scrollbar pb-1">
+              {tabs.map((tab, index) => {
+                const activeTab = selectedTab === tab;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedTab(tab)}
+                    className={`shrink-0 flex items-center justify-center rounded-full px-4 py-1.5 transition-all ${
+                      activeTab
+                        ? "bg-[#222222] text-white shadow-sm"
+                        : "bg-[#f4f1ea] border border-transparent hover:border-gray-300 text-[#6b6b6b] hover:text-[#222222]"
+                    }`}
+                  >
+                    <span className="text-sm font-medium">{tab}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -151,32 +158,40 @@ export default function BlogDashboard() {
             ) : (
               articles.map((article, index) => (
                 <article
+                  id={article.id}
                   key={index}
                   className={`group flex ${
-                    article.author ? "flex-col sm:flex-row" : ""
+                    article.authorName ? "flex-col sm:flex-row" : ""
                   } gap-8 items-start justify-between pb-10 border-b border-[#e0e0e0] last:border-0 cursor-pointer`}
                 >
                   <div className="flex flex-1 flex-col gap-2.5">
                     {/* Author Info */}
                     <div className="flex items-center gap-2 mb-1">
-                      <div
-                        className="bg-center bg-no-repeat bg-cover rounded-full size-6 ring-2 ring-white"
-                        style={{
-                          backgroundImage: `url("${article.author}")`,
-                        }}
-                      />
-                      <span className="text-sm font-semibold text-[#222222]">
-                        {article.author.name}
-                      </span>
+                      <div className="bg-center text-center bg-no-repeat bg-cover bg-greenish text-white rounded-full size-6 ring-2 ring-white">
+                        {article.authorName
+                          ? article.authorName.charAt(0).toUpperCase()
+                          : "U"}
+                      </div>
                       {article.createdAt && (
-                        <>
-                          <span className="text-sm text-[#6b6b6b]">in</span>
-                          <span className="text-sm font-semibold text-[#222222]">
-                            {}
+                        <div>
+                          <span className="text-sm text-[#6b6b6b]">
+                            {`
+                            Written by ${article.authorName} on `}
                           </span>
-                        </>
+
+                          <span className="text-sm font-semibold text-[#222222]">
+                            {article.createdAt
+                              .toDate()
+                              .toLocaleDateString(undefined, {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                          </span>
+                        </div>
                       )}
-                      <span className="text-sm text-[#6b6b6b]">· {}</span>
                     </div>
 
                     {/* Title */}
@@ -185,7 +200,7 @@ export default function BlogDashboard() {
                     </h2>
 
                     {/* Description */}
-                    <p className="text-[#6b6b6b] text-base font-sans line-clamp-2 leading-relaxed">
+                    <p className="text-[#6b6b6b] text-base line-clamp-2 leading-relaxed">
                       {article.content}
                     </p>
 
@@ -193,16 +208,19 @@ export default function BlogDashboard() {
                     <div className="flex items-center justify-between mt-4">
                       <div className="flex items-center gap-3">
                         <span className="rounded-full bg-[#f4f1ea] px-3 py-1 text-xs font-medium text-[#222222] font-sans">
-                          {article.tag}
+                          {article.authorName}
                         </span>
                         <span className="text-xs text-[#6b6b6b] font-sans">
-                          {article.readTime}
+                          {article.topics &&
+                            article.topics.map((topic) => topic)}
                         </span>
-                        {article.membersOnly && (
-                          <Star className="size-3.5 text-yellow-500 fill-yellow-500" />
-                        )}
                       </div>
                       <div className="flex items-center gap-3 text-[#6b6b6b]">
+                        <HandleLikes
+                          articleId={article.id}
+                          likes={article.likes || []}
+                          userId={user?.uid}
+                        />
                         <button className="hover:text-[#2d5e40] transition-colors">
                           <Bookmark className="size-5" />
                         </button>
@@ -215,16 +233,6 @@ export default function BlogDashboard() {
                       </div>
                     </div>
                   </div>
-
-                  {/* Image */}
-                  {article.author && (
-                    <div className="w-full sm:w-[160px] aspect-[16/10] sm:aspect-square shrink-0 bg-gray-100 rounded-xl overflow-hidden shadow-sm">
-                      <div
-                        className="w-full h-full bg-center bg-no-repeat bg-cover transform transition-transform duration-700 group-hover:scale-105"
-                        style={{ backgroundImage: `url("${article.author}")` }}
-                      />
-                    </div>
-                  )}
                 </article>
               ))
             )}
@@ -240,10 +248,10 @@ export default function BlogDashboard() {
               Trending now
             </h3>
             <div className="flex flex-col gap-6">
-              {trending.map((item, index) => (
+              {trendingArticles?.map((article, index) => (
                 <Link
                   key={index}
-                  href="#"
+                  href={`#${article.id}`}
                   className="group flex gap-4 items-start"
                 >
                   <span className="text-2xl font-bold text-gray-200 group-hover:text-[#2d5e40]/50 transition-colors leading-none -mt-1 font-sans">
@@ -251,21 +259,16 @@ export default function BlogDashboard() {
                   </span>
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
-                      <div
-                        className="bg-center bg-no-repeat bg-cover rounded-full size-5"
-                        style={{
-                          backgroundImage: `url("${item.author.avatar}")`,
-                        }}
-                      />
                       <span className="text-xs font-medium text-[#222222]">
-                        {item.author.name}
+                        {article.authorName}
                       </span>
                     </div>
                     <h4 className="text-base font-bold text-[#222222] leading-snug group-hover:text-[#2d5e40] transition-colors">
-                      {item.title}
+                      {article.title}
                     </h4>
                     <span className="text-xs text-[#6b6b6b] font-sans">
-                      {item.date} · {item.readTime}
+                      {article.createdAt?.toDate().toLocaleDateString()} ·{" "}
+                      {/*item.readTime*/}
                     </span>
                   </div>
                 </Link>

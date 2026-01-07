@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { articlesReferecne } from "@/lib/firebase";
+import { articlesReference } from "@/lib/firebase";
 import { addDoc, serverTimestamp } from "firebase/firestore";
 
 export function usePublish() {
@@ -19,13 +19,14 @@ export function usePublish() {
     userName,
   }: postData) {
     try {
-      await addDoc(articlesReferecne, {
+      await addDoc(articlesReference, {
         title: title,
         content: content,
         authorId: uid,
         authorName: userName,
         topics: topics,
         createdAt: serverTimestamp(),
+        likes: [],
         likesCount: 0,
       });
       return true;

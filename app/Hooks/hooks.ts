@@ -17,7 +17,7 @@ export function useAuth(): userInterface {
   const [userData, setUserData] = useState<userInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async (user) => {
+    const unSubscribe = onAuthStateChanged(auth, async function (user) {
       try {
         if (user) {
           setUser(user);
