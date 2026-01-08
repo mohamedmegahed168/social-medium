@@ -12,7 +12,7 @@ export default function HandleDeletes({
   userId,
 }: DeleteInfo) {
   console.log(articleId, authorId, userId);
-  const deleteArticle = useDeleteArticle();
+  const { deleteArticle, loading } = useDeleteArticle();
   const [showModal, setShowModal] = useState<boolean>(false);
   async function deleteHandler() {
     if (authorId !== userId) {
@@ -63,7 +63,14 @@ export default function HandleDeletes({
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium text-sm flex items-center gap-2 transition-colors disabled:opacity-50"
                 onClick={deleteHandler}
               >
-                yes, delete
+                {loading ? (
+                  <>
+                    <span className="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    deleting....
+                  </>
+                ) : (
+                  "yes, delete"
+                )}
               </button>
             </div>
           </div>

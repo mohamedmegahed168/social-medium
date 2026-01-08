@@ -4,7 +4,8 @@ import Link from "next/link";
 import DashboardNav from "@/components/DashboardNav";
 import HandleLikes from "@/components/HandleLikes";
 import HandleDeletes from "@/components/HandleDeletes";
-import { Bookmark, Trash, MoreHorizontal, TrendingUp } from "lucide-react";
+import { Bookmark, MoreHorizontal, TrendingUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../Hooks/hooks";
@@ -22,16 +23,38 @@ export default function BlogDashboard() {
     "Productivity",
   ];
   const [selectedTab, setSelectedTab] = useState<string | null>("All");
-  const { user, loading, userData, error } = useAuth();
-  const { articles } = useGetArticles(selectedTab, user?.uid);
-  console.log(articles);
+  const { user, loading } = useAuth();
+  const { articles, loading: articlesLoading } = useGetArticles(
+    selectedTab,
+    user?.uid
+  );
   const trendingArticles = useTrendingArticles();
+
+  // framer-motion variants for list + items
+  const listVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.06 } },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 8 },
+    visible: { opacity: 1, y: 0 },
+    hover: { y: -4, boxShadow: "0 14px 30px rgba(34,197,94,0.06)" },
+  };
+
+  // Loader visibility (keep for a small minimum time to avoid flicker)
+  const [showLoader, setShowLoader] = useState(true);
+  useEffect(() => {
+    if (!articlesLoading) {
+      const t = setTimeout(() => setShowLoader(false), 450);
+      return () => clearTimeout(t);
+    }
+  }, [articlesLoading]);
 
   useEffect(() => {
     if (!user && !loading) {
       router.push("/SignIn");
     }
-  });
+  }, [user, loading, router]);
 
   const topics = ["Data Science", "Politics", "Cryptocurrency", "Psychology"];
 
@@ -46,10 +69,53 @@ export default function BlogDashboard() {
     "About",
   ];
   if (loading) {
-    return <p> loading your profile</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="flex items-center gap-3 flex-col"
+        >
+          <div className="flex items-center gap-2">
+            <motion.span
+              animate={{ y: [0, -8, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.9,
+                ease: "easeInOut",
+              }}
+              className="w-3 h-3 bg-[#2d5e40] rounded-full"
+            />
+            <motion.span
+              animate={{ y: [0, -10, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.9,
+                ease: "easeInOut",
+                delay: 0.08,
+              }}
+              className="w-3 h-3 bg-[#2d5e40] rounded-full"
+            />
+            <motion.span
+              animate={{ y: [0, -6, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.9,
+                ease: "easeInOut",
+                delay: 0.16,
+              }}
+              className="w-3 h-3 bg-[#2d5e40] rounded-full"
+            />
+          </div>
+          <div className="mt-4 text-sm text-[#6b6b6b]">Loading profile…</div>
+        </motion.div>
+      </div>
+    );
   }
+
   if (!user) {
-    return;
+    return null;
   }
 
   return (
@@ -59,7 +125,12 @@ export default function BlogDashboard() {
       {/* Main Content */}
       <div className="flex flex-1 justify-center w-full max-w-7xl mx-auto">
         {/* Feed */}
-        <main className="w-full max-w-7xl flex-1 px-4 md:px-10 py-8 lg:border-r border-[#e0e0e0]">
+        <motion.main
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="relative w-full max-w-7xl flex-1 px-4 md:px-10 py-8 lg:border-r border-[#e0e0e0]"
+        >
           {/* Tabs */}
           <div className="sticky top-16 z-40 bg-[#fdfbf7]/95 backdrop-blur-sm -mx-4 px-4 md:-mx-10 md:px-10 pb-4 pt-2 border-b border-[#e0e0e0] mb-8">
             <div className="flex items-center justify-center sm:justify-start gap-3 flex-wrap overflow-x-hidden no-scrollbar pb-1">
@@ -82,45 +153,115 @@ export default function BlogDashboard() {
             </div>
           </div>
 
+          {/* Loader overlay while initial articles load */}
+          <AnimatePresence>
+            {showLoader && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 flex items-center justify-center z-50 bg-gradient-to-b from-white/80 to-white/60 backdrop-blur-sm"
+              >
+                <motion.div
+                  initial={{ scale: 0.98 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex items-center gap-3 flex-col"
+                >
+                  <div className="flex items-center gap-2">
+                    <motion.span
+                      animate={{ y: [0, -8, 0] }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 0.9,
+                        ease: "easeInOut",
+                        delay: 0,
+                      }}
+                      className="w-3 h-3 bg-[#2d5e40] rounded-full"
+                    />
+                    <motion.span
+                      animate={{ y: [0, -10, 0] }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 0.9,
+                        ease: "easeInOut",
+                        delay: 0.1,
+                      }}
+                      className="w-3 h-3 bg-[#2d5e40] rounded-full"
+                    />
+                    <motion.span
+                      animate={{ y: [0, -6, 0] }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 0.9,
+                        ease: "easeInOut",
+                        delay: 0.2,
+                      }}
+                      className="w-3 h-3 bg-[#2d5e40] rounded-full"
+                    />
+                  </div>
+                  <div className="mt-4 text-sm text-[#6b6b6b]">
+                    Loading articles…
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Articles */}
-          <div className="flex flex-col gap-10">
+          <motion.div
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col gap-6 relative"
+          >
             {articles.length === 0 ? (
-              <article> No articles where found </article>
+              <div className="py-16 text-center text-sm text-[#6b6b6b]">
+                No articles found —{" "}
+                <Link href="/Write" className="text-[#2d5e40] underline">
+                  write your first one
+                </Link>
+                .
+              </div>
             ) : (
-              articles.map((article, index) => (
-                <article
+              articles.map((article) => (
+                <motion.article
                   id={article.id}
-                  key={index}
-                  className={`group flex ${
-                    article.authorName ? "flex-col sm:flex-row" : ""
-                  } gap-8 items-start justify-between pb-5 border-b border-[#e0e0e0] last:border-0 `}
+                  key={article.id}
+                  variants={itemVariants}
+                  whileHover="hover"
+                  layout
+                  className={`group bg-white/50 rounded-md p-5 md:p-6 ${
+                    article.authorName
+                      ? "flex flex-col sm:flex-row"
+                      : "flex flex-col"
+                  } gap-6 items-start justify-between border border-transparent hover:border-[#e8f3ea]`}
                 >
                   <div className="flex flex-1 flex-col gap-2.5">
                     {/* Author Info */}
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="bg-center text-center bg-no-repeat bg-cover bg-greenish text-white rounded-full size-6 ring-2 ring-white">
+                    <div className="flex items-center gap-3 mb-1">
+                      <div className="bg-center text-center bg-no-repeat bg-cover bg-greenish text-white rounded-full size-8 ring-2 ring-white flex items-center justify-center text-sm font-bold">
                         {article.authorName
                           ? article.authorName.charAt(0).toUpperCase()
                           : "U"}
                       </div>
                       {article.createdAt && (
                         <div>
-                          <span className="text-sm text-[#6b6b6b]">
-                            {`
-                            Written by ${article.authorName} on `}
-                          </span>
-
-                          <span className="text-sm font-semibold text-[#222222]">
+                          <div className="text-sm text-[#6b6b6b]">
+                            Written by{" "}
+                            <span className="font-semibold text-[#222222]">
+                              {article.authorName}
+                            </span>
+                          </div>
+                          <div className="text-xs text-[#6b6b6b] mt-0.5">
                             {article.createdAt
                               .toDate()
                               .toLocaleDateString(undefined, {
                                 year: "numeric",
-                                month: "long",
+                                month: "short",
                                 day: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
                               })}
-                          </span>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -141,47 +282,64 @@ export default function BlogDashboard() {
                         <span className="rounded-full bg-[#f4f1ea] px-3 py-1 text-xs font-medium text-[#222222] ">
                           {article.authorName}
                         </span>
-                        <div className="text-xs text-[#6b6b6b]  flex gap-3">
+                        <div className="text-xs text-[#6b6b6b] flex gap-2">
                           {article.topics &&
-                            article.topics.map((topic, index) => (
-                              <p
-                                className="border border-gray-300 py-1 px-1 rounded-xl"
-                                key={index}
+                            article.topics.map((topic, i) => (
+                              <span
+                                className="border border-gray-300 py-1 px-2 rounded-full text-xs"
+                                key={i}
                               >
-                                {" "}
-                                {topic}{" "}
-                              </p>
+                                {topic}
+                              </span>
                             ))}
                         </div>
                       </div>
-                      <div className="flex items-center justify-center gap-3 text-[#6b6b6b]">
-                        <HandleLikes
-                          articleId={article.id}
-                          likes={article.likes || []}
-                          userId={user?.uid}
-                          likesCount={article.likesCount || 0}
-                        />
-                        <button className="hover:text-[#2d5e40] transition-colors">
-                          <Bookmark size={24} />
-                        </button>
 
-                        <HandleDeletes
-                          articleId={article.id}
-                          authorId={article.authorId}
-                          userId={user.uid}
-                        />
+                      <div className="flex items-center justify-center gap-2 text-[#6b6b6b]">
+                        <div className="flex items-center gap-2">
+                          <HandleLikes
+                            articleId={article.id}
+                            likes={article.likes || []}
+                            userId={user?.uid}
+                            likesCount={article.likesCount || 0}
+                          />
 
-                        <button className="hover:text-[#222222] transition-colors">
-                          <MoreHorizontal className="size-5" />
-                        </button>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.98 }}
+                            aria-label="Bookmark article"
+                            title="Save"
+                            className="rounded-full p-2 hover:bg-[#f4f1ea] transition-colors"
+                          >
+                            <Bookmark size={20} />
+                          </motion.button>
+
+                          <motion.div whileTap={{ scale: 0.96 }}>
+                            <HandleDeletes
+                              articleId={article.id}
+                              authorId={article.authorId}
+                              userId={user.uid}
+                            />
+                          </motion.div>
+
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.98 }}
+                            aria-label="More actions"
+                            title="More"
+                            className="rounded-full p-2 hover:bg-[#f4f1ea] transition-colors"
+                          >
+                            <MoreHorizontal size={18} />
+                          </motion.button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </article>
+                </motion.article>
               ))
             )}
-          </div>
-        </main>
+          </motion.div>
+        </motion.main>
 
         {/* Sidebar */}
         <aside className="hidden lg:flex flex-col w-[380px] pl-10 pt-10 pb-8 h-fit sticky top-16 border-l border-transparent">

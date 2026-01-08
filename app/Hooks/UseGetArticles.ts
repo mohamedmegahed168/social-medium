@@ -25,9 +25,10 @@ export function useGetArticles(
   userId?: string | null
 ) {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     let q;
-    console.log(q);
 
     if (!selectedTab || selectedTab === "All") {
       q = query(articlesReference, orderBy("createdAt", "desc"));
@@ -50,8 +51,9 @@ export function useGetArticles(
         ...(doc.data() as Omit<Article, "id">),
       }));
       setArticles(articlesData);
+      setLoading(false);
     });
     return () => unSubscribe();
-  }, [selectedTab]);
-  return { articles };
+  }, [selectedTab, userId]);
+  return { articles, loading };
 }
