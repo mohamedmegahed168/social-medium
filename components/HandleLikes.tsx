@@ -5,8 +5,14 @@ interface LikeProps {
   articleId: string;
   likes: string[];
   userId: string;
+  likesCount: number;
 }
-export default function HandleLikes({ articleId, likes, userId }: LikeProps) {
+export default function HandleLikes({
+  articleId,
+  likes,
+  userId,
+  likesCount,
+}: LikeProps) {
   const isLiked = userId ? likes.includes(userId) : false;
   const toggleLike = useToggleLike();
   async function handleClick() {
@@ -15,13 +21,16 @@ export default function HandleLikes({ articleId, likes, userId }: LikeProps) {
   }
   return (
     <button
-      className={`flex hover:text-blue-500 transition-colors ${
-        isLiked ? "bg-blue" : "bg-gray-300"
-      }`}
+      className="flex hover:text-blue-500 transition-colors"
       onClick={handleClick}
     >
-      <span> {likes?.length} likes </span>
-      <ThumbsUp className="size-5" />
+      {typeof likesCount === "number" && <span> {likesCount}</span>}
+      <ThumbsUp
+        size={24}
+        fill={`${isLiked ? "#3b82f6" : "transparent"}`}
+        color={`${isLiked ? "#3b82f6" : "#64748b"}`}
+        strokeWidth={`${isLiked ? 0 : 2}`}
+      />
     </button>
   );
 }

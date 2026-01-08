@@ -11,6 +11,7 @@ export interface Article {
   id: string;
   title: string;
   content: string;
+  authorId: string;
   authorName: string;
   topics: string[];
   uid: string;

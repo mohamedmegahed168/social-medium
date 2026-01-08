@@ -1,11 +1,15 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useRef, useState, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { useAuth } from "../Hooks/hooks";
 import { usePublish } from "../Hooks/UsePublish";
 import { useRouter } from "next/navigation";
-import { Check, PlusIcon } from "lucide-react";
+import CheckListItem from "@/components/CheckListItem";
+import WriteHeader from "@/components/WriteHeader";
+import { Check } from "lucide-react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 // 1. Define the Shape of your Form Data
 interface PostFormData {
   title: string;
@@ -33,11 +37,11 @@ export default function NewPostEditor() {
     handleSubmit,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = useForm<PostFormData>({
     defaultValues: {
       title: "",
-      subtitle: "",
       content: "",
       topics: [], // Default selection
     },
@@ -50,23 +54,40 @@ export default function NewPostEditor() {
   const contentRef = useRef<HTMLTextAreaElement | null>(null);
   const { user, userData } = useAuth();
   const { publishArticle, error: publishError } = usePublish();
+  const [checkPublish, setCheckPublish] = useState<boolean>(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [publishedSuccess, setPublishedSuccess] = useState(false);
+  const [titleFocused, setTitleFocused] = useState(false);
+  const [contentFocused, setContentFocused] = useState(false);
   // 3. Watch values to update the UI Sidebar dynamically
-  const watchedTitle = watch("title");
-  const watchedContent = watch("content");
-  const watchedTopics = watch("topics");
+  const watchedTitle = useWatch({ control, name: "title" });
+  const watchedContent = useWatch({ control, name: "content" });
+  const watchedTopics = useWatch({ control, name: "topics" });
 
-  const hasEnoughContent = (watchedContent?.length || 0) > 100;
-  const topicChecker = (watchedTopics?.length || 0) > 0;
-  // Helper to calculate progress
-  const calculateProgress = () => {
+  const hasEnoughContent = useMemo(() => {
+    return (watchedContent?.length || 0) > 100;
+  }, [watchedContent]);
+  const topicChecker = useMemo(() => {
+    return (watchedTopics?.length || 0) > 0;
+  }, [watchedTopics]);
+  const words = useMemo(() => {
+    return watchedContent
+      ? watchedContent.trim().split(/\s+/).filter(Boolean).length
+      : 0;
+  }, [watchedContent]);
+  const readingMinutes = useMemo(() => {
+    return Math.max(1, Math.ceil(words / 200));
+  }, [words]);
+
+  const calculateProgress = useMemo(() => {
     let progress = 0;
     if (watchedTitle?.length > 0) progress += 25;
-    if (watchedContent?.length > 100) progress += 25; // Roughly 100 chars
+    if (watchedContent?.length > 100) progress += 25;
     if (watchedTopics?.length > 0) progress += 25;
     return progress;
-  };
-
-  const currentProgress = calculateProgress();
+  }, [watchedContent, watchedTitle, watchedTopics]);
+  const currentProgress = calculateProgress;
+  const canPublish = !!watchedTitle && hasEnoughContent && topicChecker;
 
   // 4. Auto-resize function
   const handleResize = (
@@ -78,7 +99,6 @@ export default function NewPostEditor() {
       localRef.current.style.height = localRef.current.scrollHeight + "px";
     }
   };
-  console.log(watchedTopics);
   // Toggle Topic Logic
   function toggleTopic(topic: string) {
     const current = watchedTopics || [];
@@ -93,64 +113,48 @@ export default function NewPostEditor() {
       }
     }
   }
-
+  console.log("hello");
   function isTopicSelected(topic: string) {
     const selectedTopic = watchedTopics?.includes(topic);
     return selectedTopic;
   }
   async function onSubmit(data: PostFormData) {
     if (!user || !userData) return;
-
-    const success = await publishArticle({
-      title: data.title,
-      content: data.content,
-      uid: user.uid,
-      topics: watchedTopics,
-      userName: userData.userName,
-    });
-    if (!success) return;
-    else {
-      router.push("/Dashboard");
+    setIsPublishing(true);
+    try {
+      const success = await publishArticle({
+        title: data.title,
+        content: data.content,
+        uid: user.uid,
+        topics: watchedTopics,
+        userName: userData.userName,
+      });
+      if (!success) {
+        setIsPublishing(false);
+        return;
+      } else {
+        setCheckPublish(true);
+        setPublishedSuccess(true);
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        router.push("/Dashboard");
+      }
+    } catch (error) {
+      setCheckPublish(false);
+      setIsPublishing(false);
+      console.error(error);
     }
   }
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-primary  min-h-screen flex flex-col transition-colors duration-200">
       {/* HEADER */}
-      <header className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 h-[69px]">
-        <div className="flex items-center gap-6 text-text-main">
-          <a className="flex items-center gap-2 group" href="#">
-            <h2 className="text-xl font-bold tracking-tight group-hover:opacity-80 transition-opacity font-sans">
-              Writer
-            </h2>
-          </a>
-          <div className="hidden md:flex items-center text-sm text-text-secondary">
-            <span className="w-px h-5 bg-border-color mx-4"></span>
-            <span>Draft in user&apos;s workspace</span>
-            <span className="mx-2">•</span>
-            <span>Saved just now</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <button className="flex items-center justify-center rounded-full h-9 px-5 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 text-text-primary text-sm font-medium transition-colors border border-gray-400 shadow-sm outline-none">
-            Preview
-          </button>
-          <button
-            onClick={handleSubmit(onSubmit)}
-            className="flex items-center justify-center rounded-full h-9 px-5 bg-[#2d5e40] hover:bg-green-600 text-white text-sm font-medium transition-colors shadow-sm"
-          >
-            Publish
-          </button>
-          <div className="ml-2 bg-greenish flex items-center justify-center size-9 rounded-full bg-gray-200 overflow-hidden border border-gray-100 dark:border-gray-700">
-            {userData?.userName && (
-              <p className="text-white">
-                {" "}
-                {userData.userName.charAt(0).toUpperCase()}{" "}
-              </p>
-            )}
-          </div>
-        </div>
-      </header>
+      <WriteHeader
+        userName={userData?.userName}
+        isPublishing={isPublishing}
+        canPublish={canPublish}
+        publishedSuccess={publishedSuccess}
+        onPublish={handleSubmit(onSubmit)}
+      />
 
       {/* MAIN FORM */}
       <main className="flex-1 flex w-full">
@@ -159,165 +163,169 @@ export default function NewPostEditor() {
           className="w-full max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 px-4 lg:px-8 py-8 h-full"
         >
           {/* LEFT COLUMN: EDITOR */}
-          <div className="lg:col-span-8 flex flex-col bg-white dark:bg-white/5 lg:rounded-2xl lg:shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-200 overflow-hidden relative">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="lg:col-span-8 flex flex-col bg-white dark:bg-white/5  sm:rounded-2xl lg:shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-200 overflow-hidden relative"
+          >
             <div className="flex-1 flex flex-col w-full">
               <div className="px-8 sm:px-12 pt-12 pb-2 max-w-4xl mx-auto w-full">
                 {/* TITLE INPUT */}
                 <div className="mb-6">
-                  <textarea
-                    {...register("title", { required: true })}
-                    ref={(e) => {
-                      register("title").ref(e);
-                      titleRef.current = e;
-                    }}
-                    onInput={(e) =>
-                      handleResize(
-                        e,
-                        titleRef as React.MutableRefObject<HTMLTextAreaElement>
-                      )
+                  <motion.div
+                    animate={
+                      titleFocused
+                        ? {
+                            boxShadow: "0 10px 30px rgba(34,197,94,0.08)",
+                            y: -1,
+                          }
+                        : { boxShadow: "none", y: 0 }
                     }
-                    className="w-full bg-transparent text-5xl sm:text-4xl font-bold placeholder:text-gray-300/50 text-text-primary border-none focus:ring-0 focus:outline-none resize-none overflow-hidden p-0 leading-[1.1] tracking-tight"
-                    placeholder="Title"
-                    rows={1}
-                    style={{ minHeight: "4rem" }}
-                  />
+                    transition={{ duration: 0.18 }}
+                    className="relative rounded-2xl "
+                  >
+                    <label
+                      htmlFor="post-title"
+                      className={`absolute left-4 top-4 text-sm text-secondary transition-all origin-left pointer-events-none ${
+                        watchedTitle || titleFocused
+                          ? "-translate-y-5 scale-90 text-greenish"
+                          : "translate-y-0 scale-100"
+                      }`}
+                    >
+                      Title
+                    </label>
+
+                    <textarea
+                      id="post-title"
+                      aria-label="Post title"
+                      {...register("title", { required: true })}
+                      ref={(e) => {
+                        register("title").ref(e);
+                        titleRef.current = e;
+                      }}
+                      onFocus={() => setTitleFocused(true)}
+                      onBlur={() => setTitleFocused(false)}
+                      onInput={(e) => {
+                        handleResize(
+                          e,
+                          titleRef as React.MutableRefObject<HTMLTextAreaElement>
+                        );
+                      }}
+                      className="w-full bg-transparent text-5xl sm:text-4xl font-semibold text-primary border-none focus:outline-none resize-none p-4 pt-10 pb-4 leading-[1.05] tracking-tight caret-green-600 placeholder-transparent transition-all"
+                      rows={1}
+                      style={{ minHeight: "4.5rem" }}
+                    />
+                  </motion.div>
+
                   {errors.title && (
-                    <span className="text-red-400 text-sm font-sans">
+                    <span className="text-red-400 text-sm">
                       Title is required
                     </span>
                   )}
                 </div>
-
-                {/* AUTHOR & SUBTITLE */}
               </div>
 
               {/* TOOLBAR (Sticky) */}
               <div className=" bg-white/95 dark:bg-[#15231a]/95 backdrop-blur-md border-b border-gray-300 px-8 sm:px-12 py-3 transition-all w-full shadow-[0_4px_20px_-4px_rgba(0,0,0,0.02)]">
                 <div className="max-w-4xl mx-auto flex gap-1 items-center justify-between">
                   {/* Word Count */}
-                  <span className="rounded-md text-sm text-secondary  hidden sm:block bg-gray-50 dark:bg-white/5 px-3 py-2 rounded border-b border-gray-300">
-                    {watchedContent
-                      ? watchedContent.trim().split(/\s+/).length
-                      : 0}
-                    words
+                  <span className="rounded-md text-sm text-secondary hidden sm:block bg-gray-50 dark:bg-white/5 px-3 py-2 rounded border-b border-gray-300">
+                    {words} words • {readingMinutes} min read
                   </span>
                 </div>
               </div>
 
               {/* MAIN CONTENT AREA */}
-              <div className="px-8 sm:px-12 py-10 max-w-4xl mx-auto w-full flex-1 min-h-[500px]">
+              <div className="px-8 sm:px-12 py-10 max-w-4xl mx-auto w-full flex-1 ">
                 {publishError && <p> error: {publishError} </p>}
-                <div className="relative h-full">
-                  {/* CONTENT TEXTAREA */}
+                <motion.div
+                  animate={
+                    contentFocused
+                      ? {
+                          boxShadow: "0 50px 50px rgba(34,197,94,0.06)",
+                          y: -2,
+                        }
+                      : { boxShadow: "none", y: 0 }
+                  }
+                  transition={{ duration: 0.18 }}
+                  className="relative h-full"
+                >
+                  <label
+                    htmlFor="post-content"
+                    className={`absolute left-6 top-4 text-sm text-secondary transition-all pointer-events-none ${
+                      watchedContent || contentFocused
+                        ? "-translate-y-5 scale-90 text-greenish"
+                        : "translate-y-0 scale-100"
+                    }`}
+                  >
+                    Write your story
+                  </label>
+
                   <textarea
+                    id="post-content"
+                    aria-label="Post content"
                     {...register("content")}
                     ref={(e) => {
                       register("content").ref(e);
                       contentRef.current = e;
                     }}
-                    onInput={(e) =>
+                    onFocus={() => setContentFocused(true)}
+                    onBlur={() => setContentFocused(false)}
+                    onInput={(e) => {
                       handleResize(
                         e,
                         contentRef as React.MutableRefObject<HTMLTextAreaElement>
-                      )
-                    }
-                    className="w-full bg-transparent text-xl leading-8 text-primary placeholder:text-gray-300  focus:ring-0 focus:outline-none resize-none h-full font-normal"
+                      );
+                    }}
+                    className="w-full bg-transparent text-lg leading-8 text-primary placeholder-transparent focus:outline-none resize-none p-6 rounded-md min-h-[320px] caret-green-600 transition-all"
                     placeholder="Tell your story..."
-                    style={{ minHeight: "500px" }}
+                    style={{ minHeight: "320px" }}
                   />
-                </div>
+
+                  {watchedContent && !hasEnoughContent && (
+                    <p className="text-sm text-secondary mt-2">
+                      Keep writing — aim for 100+ characters to improve reach.
+                    </p>
+                  )}
+                </motion.div>
               </div>
             </div>
-          </div>
+          </motion.div>
           {/* RIGHT COLUMN: SIDEBAR */}
-          <div className="lg:col-span-4 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.05 }}
+            className="lg:col-span-4 relative"
+          >
             <div className=" flex flex-col gap-6">
               {/* PUBLISHING STATUS CARD */}
               <div className="p-6 rounded-xl border border-gray-200 bg-white dark:bg-white/5 shadow-sm">
-                <h3 className="text-sm font-bold text-primary mb-4 uppercase tracking-wider flex items-center justify-between">
+                <h3 className="text-sm font-bold text-primary mb-4  tracking-wider flex items-center justify-between">
                   Publishing Status
-                  <span className="text-sm bg-primary/10 text-primary px-2 py-1 rounded-full border border-gray-200">
+                  <span className="text-sm bg-primary/10 text-primary px-2 py-1 font-normal rounded-full border border-gray-200">
                     Draft
                   </span>
                 </h3>
                 <div className="space-y-3.5">
                   {/* Checklist Item: Title */}
-                  <div className="flex items-center justify-between text-sm group ">
-                    <label
-                      className={`flex items-center gap-3 transition-colors  ${
-                        watchedTitle ? "text-primary" : "text-secondary"
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        readOnly
-                        checked={!!watchedTitle}
-                        className="peer sr-only"
-                      />
-                      <div
-                        className={`w-5 h-5  rounded-full flex items-center justify-center ${
-                          watchedTitle
-                            ? "bg-greenish border-none"
-                            : "bg-white border border-gray-300"
-                        }`}
-                      >
-                        {watchedTitle && <Check className="text-white " />}
-                      </div>
-                      Title provided{" "}
-                    </label>{" "}
-                  </div>
+                  <CheckListItem
+                    checked={!!watchedTitle}
+                    label="Title provided"
+                  />
                   {/* Checklist Item: Word Count */}
-                  <div className="flex items-center justify-between text-sm group ">
-                    <label
-                      className={`flex items-center gap-3 transition-colors ${
-                        hasEnoughContent ? "text-primary" : "text-secondary"
-                      }`}
-                    >
-                      <input
-                        className="peer sr-only"
-                        type="checkbox"
-                        readOnly
-                        checked={hasEnoughContent}
-                      />
-                      <div
-                        className={`w-5 h-5  rounded-full flex items-center justify-center ${
-                          hasEnoughContent
-                            ? "bg-greenish border-none"
-                            : "bg-white border border-gray-300"
-                        }`}
-                      >
-                        {hasEnoughContent && <Check className="text-white " />}
-                      </div>
-                      At least 100 chars
-                    </label>
-                  </div>
+                  <CheckListItem
+                    checked={hasEnoughContent}
+                    label="At least 100 character"
+                  />
                   {/* Checklist Item: Topics */}
-                  <div className="flex items-center justify-between text-sm group c">
-                    <label
-                      className={`flex items-center gap-3 transition-colors ${
-                        topicChecker ? "text-primary" : "text-secondary"
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        className="peer sr-only"
-                        checked={topicChecker}
-                        readOnly
-                      />
-                      <div
-                        className={`w-5 h-5  rounded-full flex items-center justify-center ${
-                          topicChecker
-                            ? "bg-greenish border-none"
-                            : "bg-white border border-gray-300"
-                        }`}
-                      >
-                        {topicChecker && <Check className="text-white " />}
-                      </div>
-                      Topic selected
-                    </label>
-                  </div>
+                  <CheckListItem
+                    checked={topicChecker}
+                    label="Topic selected"
+                  />
+                  <CheckListItem checked={checkPublish} label="Click publish" />
                 </div>
-
                 {/* Progress Bar */}
                 <div className="mt-6 pt-5 border-t border-gray-300">
                   <div className="flex justify-between items-end mb-2">
@@ -329,10 +337,12 @@ export default function NewPostEditor() {
                     </span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-1.5 dark:bg-gray-700 overflow-hidden">
-                    <div
-                      className="bg-greenish h-1.5 rounded-full transition-all duration-500"
-                      style={{ width: `${currentProgress}%` }}
-                    ></div>
+                    <motion.div
+                      className="bg-greenish h-1.5 rounded-full"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${currentProgress}%` }}
+                      transition={{ duration: 0.5 }}
+                    />
                   </div>
                 </div>
               </div>
@@ -359,11 +369,14 @@ export default function NewPostEditor() {
                   {topics.map((topic) => {
                     const isSelected = isTopicSelected(topic);
                     return (
-                      <button
+                      <motion.button
                         key={topic}
                         type="button"
                         onClick={() => toggleTopic(topic)}
-                        className={`group flex items-center  gap-1.5 px-3 py-1.5 rounded-md transition-all cursor-pointer border ${
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                        aria-pressed={isSelected}
+                        className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all cursor-pointer border ${
                           isSelected
                             ? "bg-greenish/10 hover:bg-greenish/20 border-primary/20"
                             : " dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 border-gray-200"
@@ -375,27 +388,19 @@ export default function NewPostEditor() {
                           }`}
                         >
                           <Check
-                            className={`${isSelected ? "size-4" : "hidden"}`}
+                            className={`${
+                              isSelected ? "size-4" : "hidden"
+                            } transition-all`}
                           />
                           {topic}
                         </span>
-                      </button>
+                      </motion.button>
                     );
                   })}
-
-                  <button
-                    type="button"
-                    className="group flex items-center gap-1 px-2 py-1.5 rounded-md text-secondary hover:text-primary transition-colors cursor-pointer border border-transparent hover:border-primary/20 "
-                  >
-                    <span className="flex justify-center items-center gap-2 ">
-                      <PlusIcon className="size-5" />
-                      add new
-                    </span>
-                  </button>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </form>
       </main>
     </div>
