@@ -1,6 +1,5 @@
 import { articlesReference } from "@/lib/firebase";
 import { deleteDoc, doc } from "firebase/firestore";
-import { setLazyProp } from "next/dist/server/api-utils";
 import { useState } from "react";
 
 export function useDeleteArticle() {
@@ -10,6 +9,7 @@ export function useDeleteArticle() {
     try {
       setLoading(true);
       await deleteDoc(docReference);
+      setLoading(false);
       return true;
     } catch (error) {
       console.error(error);

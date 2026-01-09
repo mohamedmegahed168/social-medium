@@ -20,15 +20,9 @@ export default function WriteHeader({
       <div className="flex items-center gap-6 text-text-main">
         <Link className="flex items-center gap-2 group" href="/">
           <h2 className="text-xl font-bold tracking-tight group-hover:opacity-80 transition-opacity font-sans">
-            Writer
+            Social Medium
           </h2>
         </Link>
-        <div className="hidden md:flex items-center text-sm text-text-secondary">
-          <span className="w-px h-5 bg-border-color mx-4"></span>
-          <span>Draft in user&apos;s workspace</span>
-          <span className="mx-2">•</span>
-          <span>Saved just now</span>
-        </div>
       </div>
       <div className="flex items-center gap-3">
         <Link
@@ -56,7 +50,7 @@ export default function WriteHeader({
           whileTap={{ scale: 0.98 }}
           disabled={isPublishing || !canPublish}
           aria-disabled={isPublishing || !canPublish}
-          className={`flex items-center justify-center rounded-full h-9 px-5 text-sm font-medium transition-colors shadow-sm ${
+          className={`flex hidden sm:flex items-center cursor-pointer justify-center rounded-full h-9 px-5 text-sm font-medium transition-colors shadow-sm ${
             isPublishing || !canPublish
               ? "bg-gray-300 text-gray-600 cursor-not-allowed"
               : "bg-[#2d5e40] hover:bg-green-600 text-white"
@@ -76,7 +70,7 @@ export default function WriteHeader({
             "Publish"
           )}
         </motion.button>
-        <div className="ml-2 bg-greenish flex items-center justify-center size-9 rounded-full bg-gray-200 overflow-hidden border border-gray-100 dark:border-gray-700">
+        <div className="ml-2 bg-[#1c2e22] flex items-center justify-center size-9 rounded-full overflow-hidden border border-gray-100 dark:border-gray-700">
           {userName && (
             <p className="text-white">{userName.charAt(0).toUpperCase()}</p>
           )}

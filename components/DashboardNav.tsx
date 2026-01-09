@@ -1,6 +1,9 @@
 import Link from "next/link";
-import { Search, SquarePen, Bell } from "lucide-react";
-export default function DashboardNav() {
+import { Search, SquarePen } from "lucide-react";
+interface userData {
+  userName: string;
+}
+export default function DashboardNav({ userName }: userData) {
   return (
     <nav className=" sticky top-0 z-50 w-full w-full bg-[#fdfbf7]/95 backdrop-blur-md border-b border-[#e0e0e0]">
       <div className=" px-4 md:px-0 h-16 mx-auto max-w-7xl flex  items-center justify-between ">
@@ -30,7 +33,7 @@ export default function DashboardNav() {
               </svg>
             </div>
             <span className="text-xl font-bold tracking-tight text-[#222222]">
-              Writings
+              Social Medium
             </span>
           </Link>
 
@@ -56,23 +59,13 @@ export default function DashboardNav() {
             <SquarePen className="size-6" strokeWidth={1.5} />
             <span className="hidden sm:inline text-sm font-medium">Write</span>
           </Link>
-          <Link
-            href="/notifications"
-            className="text-[#6b6b6b] hover:text-[#222222] transition-colors"
-          >
-            <Bell className="size-6" strokeWidth={1.5} />
-          </Link>
           <button className="bg-[#2d5e40] hover:bg-[#254f36] text-white text-sm font-bold px-5 py-2 rounded-full transition-colors shadow-sm hover:shadow-md">
             Sign out
           </button>
           <div className="relative cursor-pointer group">
-            <div
-              className="bg-center bg-no-repeat bg-cover rounded-full size-9 border border-[#e0e0e0] group-hover:border-[#2d5e40] transition-colors"
-              style={{
-                backgroundImage:
-                  'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBllitWrlrwleoybJw5BsOd6wirLONrHTTypFbPWbQ1hMVa9n8CQE84MMgPFdiZY6yV6A1v9DW_xJGchIY0Uydsx3xZsS7vaxwLFBClnuxWvfxnXb3--g4NzuIPIS9u70U9SntYLbvvvabXhcPbiC2-qsKOsY3p-VD1lXgnohOIGfxsmFXA2rg88kebVcJS9K566KY7VakPNC-SzlASQSX_R-hGaA8G-vf37g-wV9anx39kgIPEQXwTUD1qssRI_2JqJKAUhGgg5gI")',
-              }}
-            />
+            <div className="text-white flex items-center justify-center bg-center bg-[#1c2e22] bg-no-repeat bg-cover rounded-full size-9 border border-[#e0e0e0] group-hover:border-[#2d5e40] transition-colors">
+              {userName.charAt(0).toUpperCase()}
+            </div>
           </div>
         </div>
       </div>

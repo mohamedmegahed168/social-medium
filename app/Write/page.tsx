@@ -2,7 +2,7 @@
 
 import { useRef, useState, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useAuth } from "../Hooks/hooks";
+import { useAuth } from "../Hooks/UseAuth";
 import { usePublish } from "../Hooks/UsePublish";
 import { useRouter } from "next/navigation";
 import CheckListItem from "@/components/CheckListItem";
@@ -167,38 +167,17 @@ export default function NewPostEditor() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="lg:col-span-8 flex flex-col bg-white dark:bg-white/5  sm:rounded-2xl lg:shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-200 overflow-hidden relative"
+            className="lg:col-span-8 rounded-2xl flex flex-col bg-white dark:bg-white/5  sm:rounded-2xl lg:shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-200 overflow-hidden relative"
           >
             <div className="flex-1 flex flex-col w-full">
               <div className="px-8 sm:px-12 pt-12 pb-2 max-w-4xl mx-auto w-full">
                 {/* TITLE INPUT */}
                 <div className="mb-6">
-                  <motion.div
-                    animate={
-                      titleFocused
-                        ? {
-                            boxShadow: "0 10px 30px rgba(34,197,94,0.08)",
-                            y: -1,
-                          }
-                        : { boxShadow: "none", y: 0 }
-                    }
-                    transition={{ duration: 0.18 }}
-                    className="relative rounded-2xl "
-                  >
-                    <label
-                      htmlFor="post-title"
-                      className={`absolute left-4 top-4 text-sm text-secondary transition-all origin-left pointer-events-none ${
-                        watchedTitle || titleFocused
-                          ? "-translate-y-5 scale-90 text-greenish"
-                          : "translate-y-0 scale-100"
-                      }`}
-                    >
-                      Title
-                    </label>
-
+                  <motion.div className="relative rounded-2xl ">
                     <textarea
                       id="post-title"
                       aria-label="Post title"
+                      placeholder="Write your title"
                       {...register("title", { required: true })}
                       ref={(e) => {
                         register("title").ref(e);
@@ -212,7 +191,7 @@ export default function NewPostEditor() {
                           titleRef as React.MutableRefObject<HTMLTextAreaElement>
                         );
                       }}
-                      className="w-full bg-transparent text-5xl sm:text-4xl font-semibold text-primary border-none focus:outline-none resize-none p-4 pt-10 pb-4 leading-[1.05] tracking-tight caret-green-600 placeholder-transparent transition-all"
+                      className="w-full bg-transparent text-2xl sm:text-3xl font-normal text-primary border-none focus:outline-none resize-none p-4 pt-10 pb-4 leading-[1.05] tracking-tight caret-green-600  transition-all"
                       rows={1}
                       style={{ minHeight: "4.5rem" }}
                     />
@@ -239,29 +218,7 @@ export default function NewPostEditor() {
               {/* MAIN CONTENT AREA */}
               <div className="px-8 sm:px-12 py-10 max-w-4xl mx-auto w-full flex-1 ">
                 {publishError && <p> error: {publishError} </p>}
-                <motion.div
-                  animate={
-                    contentFocused
-                      ? {
-                          boxShadow: "0 50px 50px rgba(34,197,94,0.06)",
-                          y: -2,
-                        }
-                      : { boxShadow: "none", y: 0 }
-                  }
-                  transition={{ duration: 0.18 }}
-                  className="relative h-full"
-                >
-                  <label
-                    htmlFor="post-content"
-                    className={`absolute left-6 top-4 text-sm text-secondary transition-all pointer-events-none ${
-                      watchedContent || contentFocused
-                        ? "-translate-y-5 scale-90 text-greenish"
-                        : "translate-y-0 scale-100"
-                    }`}
-                  >
-                    Write your story
-                  </label>
-
+                <motion.div className="relative">
                   <textarea
                     id="post-content"
                     aria-label="Post content"
@@ -278,7 +235,7 @@ export default function NewPostEditor() {
                         contentRef as React.MutableRefObject<HTMLTextAreaElement>
                       );
                     }}
-                    className="w-full bg-transparent text-lg leading-8 text-primary placeholder-transparent focus:outline-none resize-none p-6 rounded-md min-h-[320px] caret-green-600 transition-all"
+                    className="w-full bg-transparent text-lg leading-8 text-primary focus:outline-none resize-none p-6 rounded-md min-h-[320px] caret-green-600 transition-all"
                     placeholder="Tell your story..."
                     style={{ minHeight: "320px" }}
                   />
@@ -292,16 +249,17 @@ export default function NewPostEditor() {
               </div>
             </div>
           </motion.div>
+
           {/* RIGHT COLUMN: SIDEBAR */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.05 }}
-            className="lg:col-span-4 relative"
+            className="lg:col-span-4  relative"
           >
-            <div className=" flex flex-col gap-6">
+            <div className="grid grid-cols-1 gap-6">
               {/* PUBLISHING STATUS CARD */}
-              <div className="p-6 rounded-xl border border-gray-200 bg-white dark:bg-white/5 shadow-sm">
+              <div className="order-last sm:order-first p-6 rounded-xl border border-gray-200 bg-white dark:bg-white/5 shadow-sm">
                 <h3 className="text-sm font-bold text-primary mb-4  tracking-wider flex items-center justify-between">
                   Publishing Status
                   <span className="text-sm bg-primary/10 text-primary px-2 py-1 font-normal rounded-full border border-gray-200">
@@ -355,12 +313,6 @@ export default function NewPostEditor() {
                       Topics
                     </span>
                   </div>
-                  <button
-                    type="button"
-                    className="text-xs font-medium text-primary hover:text-green-600 transition-colors bg-primary/5 hover:bg-primary/10 px-2 py-1 rounded"
-                  >
-                    Manage
-                  </button>
                 </div>
                 <p className="text-sm text-secondary mb-5 leading-snug">
                   Select up to 3 topics to help readers find your story.
@@ -400,6 +352,31 @@ export default function NewPostEditor() {
                 </div>
               </div>
             </div>
+            <motion.button
+              onClick={handleSubmit(onSubmit)}
+              whileTap={{ scale: 0.98 }}
+              disabled={isPublishing || !canPublish}
+              aria-disabled={isPublishing || !canPublish}
+              className={`flex sm:hidden mt-5 w-full items-center cursor-pointer justify-center rounded-full h-9 px-5 text-sm font-medium transition-colors shadow-sm ${
+                isPublishing || !canPublish
+                  ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                  : "bg-[#2d5e40] hover:bg-green-600 text-white"
+              }`}
+            >
+              {isPublishing ? (
+                <>
+                  <span className="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Publishing...
+                </>
+              ) : publishedSuccess ? (
+                <span className="flex items-center gap-2">
+                  <Check className="text-white" />
+                  Published
+                </span>
+              ) : (
+                "Publish"
+              )}
+            </motion.button>
           </motion.div>
         </form>
       </main>

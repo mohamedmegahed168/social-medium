@@ -27,10 +27,12 @@ export default function SignUp() {
   const password = watch("password");
   const router = useRouter();
   const [generalErrors, setGeneralErrors] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   async function onSubmit(data: SignUp) {
     setGeneralErrors(null);
     const { email, userName, password } = data;
     try {
+      setLoading(true);
       const userCredentials = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -43,7 +45,10 @@ export default function SignUp() {
       });
       router.push("/Dashboard");
     } catch (error) {
+      setLoading(false);
       fireBaseErrors(error);
+    } finally {
+      setLoading(false);
     }
   }
   function fireBaseErrors(error: unknown) {
@@ -243,9 +248,19 @@ export default function SignUp() {
                 </div>
                 <button
                   type="submit"
-                  className="cursor-pointer  px-4 py-2 bg-[var(--color-greenish)] text-white rounded-2xl transition-colors hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[var(--color-greenish)] focus:ring-opacity-30"
+                  disabled={loading}
+                  className={` flex items-center justify-center cursor-pointer  px-4 py-2  text-white rounded-2xl transition-colors ${
+                    loading ? "bg-[#1c2e22]" : "bg-greenish"
+                  } hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[var(--color-greenish)] focus:ring-opacity-30`}
                 >
-                  Create account
+                  {loading ? (
+                    <>
+                      <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Setting up your account...
+                    </>
+                  ) : (
+                    "Create account"
+                  )}
                 </button>
               </form>
             </div>

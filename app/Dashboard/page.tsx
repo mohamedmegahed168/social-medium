@@ -4,14 +4,18 @@ import Link from "next/link";
 import DashboardNav from "@/components/DashboardNav";
 import HandleLikes from "@/components/HandleLikes";
 import HandleDeletes from "@/components/HandleDeletes";
-import { Bookmark, MoreHorizontal, TrendingUp } from "lucide-react";
+import HandleEdit from "@/components/HandleEdit";
+import { Bookmark, TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../Hooks/hooks";
+import { useAuth } from "../Hooks/UseAuth";
 import { useGetArticles } from "../Hooks/UseGetArticles";
 import { useTrendingArticles } from "../Hooks/UseTrendingArticles";
 
+interface userData {
+  userName: string;
+}
 export default function BlogDashboard() {
   const router = useRouter();
   const tabs = [
@@ -23,7 +27,7 @@ export default function BlogDashboard() {
     "Productivity",
   ];
   const [selectedTab, setSelectedTab] = useState<string | null>("All");
-  const { user, loading } = useAuth();
+  const { user, loading, userData } = useAuth();
   const { articles, loading: articlesLoading } = useGetArticles(
     selectedTab,
     user?.uid
@@ -117,11 +121,11 @@ export default function BlogDashboard() {
   if (!user) {
     return null;
   }
-
+  if (!userData) return;
   return (
     <div className="bg-[#fdfbf7] text-[#222222] flex flex-col min-h-screen selection:bg-[#eef5f0] selection:text-[#2d5e40]">
       {/* Navbar */}
-      <DashboardNav />
+      <DashboardNav userName={userData.userName} />
       {/* Main Content */}
       <div className="flex flex-1 justify-center w-full max-w-7xl mx-auto">
         {/* Feed */}
@@ -240,7 +244,7 @@ export default function BlogDashboard() {
                   <div className="flex flex-1 flex-col gap-2.5">
                     {/* Author Info */}
                     <div className="flex items-center gap-3 mb-1">
-                      <div className="bg-center text-center bg-no-repeat bg-cover bg-greenish text-white rounded-full size-8 ring-2 ring-white flex items-center justify-center text-sm font-bold">
+                      <div className="bg-center text-center bg-no-repeat bg-cover bg-[#1c2e22] text-white rounded-full size-8 ring-2 ring-white flex items-center justify-center text-sm font-bold">
                         {article.authorName
                           ? article.authorName.charAt(0).toUpperCase()
                           : "U"}
@@ -303,34 +307,19 @@ export default function BlogDashboard() {
                             userId={user?.uid}
                             likesCount={article.likesCount || 0}
                           />
-
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.98 }}
-                            aria-label="Bookmark article"
-                            title="Save"
-                            className="rounded-full p-2 hover:bg-[#f4f1ea] transition-colors"
-                          >
-                            <Bookmark size={20} />
-                          </motion.button>
-
-                          <motion.div whileTap={{ scale: 0.96 }}>
+                          <div>
                             <HandleDeletes
                               articleId={article.id}
                               authorId={article.authorId}
                               userId={user.uid}
                             />
-                          </motion.div>
+                          </div>
 
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.98 }}
-                            aria-label="More actions"
-                            title="More"
-                            className="rounded-full p-2 hover:bg-[#f4f1ea] transition-colors"
-                          >
-                            <MoreHorizontal size={18} />
-                          </motion.button>
+                          <HandleEdit
+                            articleId={article.id}
+                            userId={user.uid}
+                            authorId={article.authorId}
+                          />
                         </div>
                       </div>
                     </div>

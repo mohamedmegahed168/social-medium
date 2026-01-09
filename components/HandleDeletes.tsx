@@ -1,81 +1,143 @@
 import { Trash2, AlertTriangle } from "lucide-react";
 import { useDeleteArticle } from "@/app/Hooks/UseDeleteArticle";
-import { useState } from "react";
+import { createPortal } from "react-dom";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 interface DeleteInfo {
   articleId: string;
   authorId: string;
   userId: string;
 }
+interface ClientPortalProps {
+  children: React.ReactNode;
+}
+function ClientPortal({ children }: ClientPortalProps) {
+  if (typeof document === "undefined") return null;
+  return createPortal(children, document.body);
+}
+
 export default function HandleDeletes({
   articleId,
   authorId,
   userId,
 }: DeleteInfo) {
-  console.log(articleId, authorId, userId);
   const { deleteArticle, loading } = useDeleteArticle();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   async function deleteHandler() {
     if (authorId !== userId) {
-      console.log("deleting");
       return;
     }
-
     try {
       const success = await deleteArticle(articleId);
-      console.log(success);
-      if (!success) return;
-      else if (success) {
-        setShowModal(false);
+      if (success) {
+        setIsProcessing(true);
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        timeoutRef.current = setTimeout(() => {
+          setIsProcessing(false);
+          setShowModal(false);
+        }, 600);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Delete article error:", error);
     }
   }
-  return (
-    <div>
-      <button className="cursor-pointer" onClick={() => setShowModal(true)}>
-        <Trash2 />
-      </button>
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-6 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
-              </div>
 
-              <h3 className="text-lg font-bold text-gray-900">
-                Delete Article?
-              </h3>
-              <p className="text-sm text-gray-500 mt-2">
-                Are you sure you want to delete this? This action cannot be
-                undone.
-              </p>
-            </div>
-            <div className="bg-gray-50 px-6 py-4 flex gap-3 justify-center">
-              <button
-                className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 font-medium text-sm transition-colors"
-                onClick={() => setShowModal(false)}
+  const closeModal = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setShowModal(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  return (
+    <>
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.98 }}
+        className="rounded-full p-2 hover:bg-[#f4f1ea] transition-colors"
+        onClick={() => setShowModal(true)}
+      >
+        <Trash2 size={20} />
+      </motion.button>
+      <AnimatePresence mode="wait">
+        {showModal && (
+          <ClientPortal>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4"
+              onClick={closeModal}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96, y: -10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: -10 }}
+                transition={{ duration: 0.22 }}
+                className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden border border-gray-200"
+                onClick={(e) => e.stopPropagation()}
               >
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium text-sm flex items-center gap-2 transition-colors disabled:opacity-50"
-                onClick={deleteHandler}
-              >
-                {loading ? (
-                  <>
-                    <span className="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    deleting....
-                  </>
-                ) : (
-                  "yes, delete"
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+                <div className="p-6 text-center bg-gradient-to-br from-red-50 to-red-100">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.08, type: "spring", stiffness: 220 }}
+                    className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-600 mb-4"
+                  >
+                    <AlertTriangle className="h-7 w-7 text-white" />
+                  </motion.div>
+
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Delete Article?
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                    This action cannot be undone. Are you sure you want to
+                    remove this article?
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 px-6 py-4 flex gap-3 justify-center border-t border-gray-200">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={closeModal}
+                    disabled={loading || isProcessing}
+                  >
+                    Cancel
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={deleteHandler}
+                    disabled={loading || isProcessing}
+                  >
+                    {loading || isProcessing ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Deleting...
+                      </>
+                    ) : (
+                      "Yes, Delete"
+                    )}
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          </ClientPortal>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

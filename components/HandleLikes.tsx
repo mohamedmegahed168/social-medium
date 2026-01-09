@@ -1,5 +1,6 @@
 "use client";
 import { ThumbsUp } from "lucide-react";
+import { motion } from "motion/react";
 import { useToggleLike } from "@/app/Hooks/UseToggleLike";
 interface LikeProps {
   articleId: string;
@@ -20,17 +21,19 @@ export default function HandleLikes({
     await toggleLike({ articleId, isLiked, userId });
   }
   return (
-    <button
-      className="flex hover:text-blue-500 transition-colors"
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.98 }}
+      className="flex rounded-full p-2 hover:bg-[#f4f1ea] transition-colors"
       onClick={handleClick}
     >
-      {typeof likesCount === "number" && <span> {likesCount}</span>}
       <ThumbsUp
-        size={24}
-        fill={`${isLiked ? "#3b82f6" : "transparent"}`}
-        color={`${isLiked ? "#3b82f6" : "#64748b"}`}
-        strokeWidth={`${isLiked ? 0 : 2}`}
+        size={20}
+        color={isLiked ? "#254f36" : "currentColor"}
+        fill={isLiked ? "#2d5e4090" : "none"}
+        className="transition-colors duration-300"
       />
-    </button>
+      {likesCount !== 0 && likesCount && <span> {likesCount}</span>}
+    </motion.button>
   );
 }

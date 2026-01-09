@@ -100,7 +100,7 @@ function NavBar() {
             </Link>
             <Link
               className="text-sm font-medium text-gray-300 hover:text-[#17cf54] transition-colors font-sans"
-              href="/signin"
+              href="/SignIn"
             >
               Sign In
             </Link>

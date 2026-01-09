@@ -2,29 +2,71 @@
 import Link from "next/link";
 import GoogleIcon from "@/components/GoogleIcon";
 import FacebookIcon from "@/components/FacebookIcon";
+import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 export default function SignIn() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [generalErrors, setGeneralErrors] = useState<string>("");
+  const router = useRouter();
   interface SignIn {
     email: string;
     password: string;
+    confirmPassword: string;
   }
   const {
     register,
     handleSubmit,
+    setError,
+    watch,
     formState: { errors },
   } = useForm<SignIn>();
-
+  const password = watch("password");
   async function onSubmit(data: SignIn) {
+    setLoading(true);
     const { email, password } = data;
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      router.push("/Dashboard");
     } catch (error) {
-      console.log(error);
+      fireBaseErrors(error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   }
 
+  function fireBaseErrors(error: unknown) {
+    if (error instanceof FirebaseError) {
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setError("email", {
+            type: "manual",
+            message: "This email is already registered",
+          });
+          break;
+        case "auth/invalid-email":
+          setError("email", {
+            type: "manual",
+            message: "Invalied email address",
+          });
+          break;
+        case "auth/network-request-failed":
+          setGeneralErrors("Network error. Please check your connection");
+          break;
+        case "auth/too-many-requests":
+          setGeneralErrors("Too many attempts. Please try again later");
+          break;
+        default:
+          setGeneralErrors("Something went wrong. Please try again");
+      }
+    } else {
+      setGeneralErrors("An unexpected error occured");
+    }
+  }
   return (
     <div className="bg-gray-50 min-h-screen h-full flex flex-col">
       <header className="bg-white border-b border-[#dce5df] flex justify-between items-center px-2 py-3 sm:px-5">
@@ -78,6 +120,7 @@ export default function SignIn() {
             className="flex flex-col gap-3"
             onSubmit={handleSubmit(onSubmit)}
           >
+            {generalErrors && <p className="text-red-700"> {generalErrors} </p>}
             <div className="flex flex-col">
               <label htmlFor="email" className="text-secondary">
                 email:
@@ -111,6 +154,7 @@ export default function SignIn() {
                   },
                 })}
                 id="password"
+                type="password"
                 placeholder="At least 6 characters"
                 className="outline-none bg-white px-3 py-2 border border-[#dce5df] rounded-xl font-light"
               />
@@ -119,11 +163,45 @@ export default function SignIn() {
               )}
             </div>
             <div className="flex flex-col">
+              <label htmlFor="confirmPassword" className="text-secondary">
+                confirm password:
+              </label>
+              <input
+                {...register("confirmPassword", {
+                  required: "you have to confirm your password",
+                  validate: (value) =>
+                    value === password || "password do not match",
+                })}
+                id="confirmPassword"
+                type="password"
+                placeholder="Confirm your password"
+                className="outline-none bg-white px-3 py-2 border border-[#dce5df] rounded-xl font-light"
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-700">
+                  {" "}
+                  {errors.confirmPassword.message}{" "}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col">
               <button
-                className="bg-greenish cursor-pointer text-white px-3 py-2 rounded-2xl"
+                disabled={loading}
+                className={`flex items-center justify-center  text-white px-3 py-2 rounded-2xl ${
+                  loading
+                    ? "bg-[#1c2e22] cursor-not-allowed"
+                    : "bg-greenish cursor-pointer hover:bg-[#1c2e22] transition-colors"
+                }`}
                 type="submit"
               >
-                Sign in
+                {loading ? (
+                  <>
+                    <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Signing you in...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </button>
             </div>
           </form>
