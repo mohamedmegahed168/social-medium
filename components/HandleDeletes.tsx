@@ -63,7 +63,7 @@ export default function HandleDeletes({
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.98 }}
-        className="rounded-full p-2 hover:bg-[#f4f1ea] transition-colors"
+        className="rounded-full p-2 hover:bg-main-dark transition-colors"
         onClick={() => setShowModal(true)}
       >
         <Trash2 size={20} />

@@ -5,26 +5,27 @@ import DashboardNav from "@/components/DashboardNav";
 import HandleLikes from "@/components/HandleLikes";
 import HandleDeletes from "@/components/HandleDeletes";
 import HandleEdit from "@/components/HandleEdit";
-import { Bookmark, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../Hooks/UseAuth";
 import { useGetArticles } from "../Hooks/UseGetArticles";
 import { useTrendingArticles } from "../Hooks/UseTrendingArticles";
 
-interface userData {
-  userName: string;
-}
 export default function BlogDashboard() {
   const router = useRouter();
   const tabs = [
     "All",
     "My Articles",
+    "Literature",
     "Technology",
-    "Design",
-    "Culture",
     "Productivity",
+    "Religion",
+    "Art",
+    "Science",
+    "Business",
+    "Culture",
   ];
   const [selectedTab, setSelectedTab] = useState<string | null>("All");
   const { user, loading, userData } = useAuth();
@@ -34,7 +35,6 @@ export default function BlogDashboard() {
   );
   const trendingArticles = useTrendingArticles();
 
-  // framer-motion variants for list + items
   const listVariants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.06 } },
@@ -42,16 +42,42 @@ export default function BlogDashboard() {
   const itemVariants = {
     hidden: { opacity: 0, y: 8 },
     visible: { opacity: 1, y: 0 },
-    hover: { y: -4, boxShadow: "0 14px 30px rgba(34,197,94,0.06)" },
   };
 
-  // Loader visibility (keep for a small minimum time to avoid flicker)
-  const [showLoader, setShowLoader] = useState(true);
+  const [showLoader, setShowLoader] = useState(false);
+  const loaderTimeoutRef = useRef<number | null>(null);
+
   useEffect(() => {
-    if (!articlesLoading) {
-      const t = setTimeout(() => setShowLoader(false), 450);
-      return () => clearTimeout(t);
+    if (articlesLoading) {
+      // show loader on next tick to avoid synchronous setState in effect (prevents cascading renders)
+      const startTimer = setTimeout(() => setShowLoader(true), 0);
+
+      // safety timeout to avoid stuck loader in case of unexpected failures
+      if (loaderTimeoutRef.current) {
+        clearTimeout(loaderTimeoutRef.current);
+      }
+      loaderTimeoutRef.current = window.setTimeout(() => {
+        console.warn("Dashboard: loader safety timeout expired");
+        setShowLoader(false);
+        loaderTimeoutRef.current = null;
+      }, 10000);
+
+      return () => {
+        clearTimeout(startTimer);
+        if (loaderTimeoutRef.current) {
+          clearTimeout(loaderTimeoutRef.current);
+          loaderTimeoutRef.current = null;
+        }
+      };
     }
+
+    // keep loader visible a short time after load to avoid flicker
+    const t = setTimeout(() => setShowLoader(false), 350);
+    if (loaderTimeoutRef.current) {
+      clearTimeout(loaderTimeoutRef.current);
+      loaderTimeoutRef.current = null;
+    }
+    return () => clearTimeout(t);
   }, [articlesLoading]);
 
   useEffect(() => {
@@ -121,11 +147,11 @@ export default function BlogDashboard() {
   if (!user) {
     return null;
   }
-  if (!userData) return;
+  if (!userData) return null;
   return (
     <div className="bg-[#fdfbf7] text-[#222222] flex flex-col min-h-screen selection:bg-[#eef5f0] selection:text-[#2d5e40]">
       {/* Navbar */}
-      <DashboardNav userName={userData.userName} />
+      <DashboardNav userName={userData.userName} userId={user.uid} />
       {/* Main Content */}
       <div className="flex flex-1 justify-center w-full max-w-7xl mx-auto">
         {/* Feed */}
@@ -136,15 +162,24 @@ export default function BlogDashboard() {
           className="relative w-full max-w-7xl flex-1 px-4 md:px-10 py-8 lg:border-r border-[#e0e0e0]"
         >
           {/* Tabs */}
-          <div className="sticky top-16 z-40 bg-[#fdfbf7]/95 backdrop-blur-sm -mx-4 px-4 md:-mx-10 md:px-10 pb-4 pt-2 border-b border-[#e0e0e0] mb-8">
-            <div className="flex items-center justify-center sm:justify-start gap-3 flex-wrap overflow-x-hidden no-scrollbar pb-1">
-              {tabs.map((tab, index) => {
+          <div className="relative sm:sticky sm:top-16 sm:z-40 bg-[#fdfbf7]/95 backdrop-blur-sm -mx-4 px-4 md:-mx-10 md:px-10 pb-4 pt-2 border-b border-[#e0e0e0] mb-8">
+            <div
+              role="tablist"
+              aria-label="Article filters"
+              className="flex items-center justify-start gap-3 overflow-x-auto md:overflow-visible md:flex-wrap md:whitespace-normal no-scrollbar md:px-0"
+            >
+              {tabs.map((tab) => {
                 const activeTab = selectedTab === tab;
                 return (
                   <button
-                    key={index}
-                    onClick={() => setSelectedTab(tab)}
-                    className={`shrink-0 flex items-center justify-center rounded-full px-4 py-1.5 transition-all ${
+                    key={tab}
+                    role="tab"
+                    aria-selected={activeTab}
+                    tabIndex={0}
+                    onClick={() => {
+                      setSelectedTab(tab);
+                    }}
+                    className={`shrink-0 flex items-center justify-center whitespace-nowrap rounded-full px-4 py-1.5 transition-all focus:outline-none  ${
                       activeTab
                         ? "bg-[#222222] text-white shadow-sm"
                         : "bg-[#f4f1ea] border border-transparent hover:border-gray-300 text-[#6b6b6b] hover:text-[#222222]"
@@ -157,7 +192,7 @@ export default function BlogDashboard() {
             </div>
           </div>
 
-          {/* Loader overlay while initial articles load */}
+          {/* Loader overlay when show loader is true for the initial render */}
           <AnimatePresence>
             {showLoader && (
               <motion.div
@@ -215,11 +250,23 @@ export default function BlogDashboard() {
           {/* Articles */}
           <motion.div
             variants={listVariants}
+            key={selectedTab}
             initial="hidden"
             animate="visible"
             className="flex flex-col gap-6 relative"
           >
-            {articles.length === 0 ? (
+            {/* Inline fallback skeleton while fetching (if overlay is disabled) */}
+            {articlesLoading && !showLoader && (
+              <div className="py-6 flex flex-col gap-4">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="h-24 bg-white rounded-lg border border-gray-200 p-4 animate-pulse"
+                  />
+                ))}
+              </div>
+            )}
+            {!articlesLoading && articles.length === 0 ? (
               <div className="py-16 text-center text-sm text-[#6b6b6b]">
                 No articles found —{" "}
                 <Link href="/Write" className="text-[#2d5e40] underline">
@@ -232,14 +279,14 @@ export default function BlogDashboard() {
                 <motion.article
                   id={article.id}
                   key={article.id}
+                  initial="hidden"
+                  animate="visible"
                   variants={itemVariants}
-                  whileHover="hover"
-                  layout
-                  className={`group bg-white/50 rounded-md p-5 md:p-6 ${
+                  className={`border-b border-gray-200 group bg-white/50  p-3 sm:p-3 ${
                     article.authorName
                       ? "flex flex-col sm:flex-row"
                       : "flex flex-col"
-                  } gap-6 items-start justify-between border border-transparent hover:border-[#e8f3ea]`}
+                  } gap-6 items-start justify-between`}
                 >
                   <div className="flex flex-1 flex-col gap-2.5">
                     {/* Author Info */}
@@ -264,6 +311,8 @@ export default function BlogDashboard() {
                                 year: "numeric",
                                 month: "short",
                                 day: "numeric",
+                                hour: "numeric",
+                                minute: "2-digit",
                               })}
                           </div>
                         </div>
@@ -283,9 +332,6 @@ export default function BlogDashboard() {
                     {/* Footer */}
                     <div className="flex items-center justify-between mt-4">
                       <div className="flex items-center gap-3">
-                        <span className="rounded-full bg-[#f4f1ea] px-3 py-1 text-xs font-medium text-[#222222] ">
-                          {article.authorName}
-                        </span>
                         <div className="text-xs text-[#6b6b6b] flex gap-2">
                           {article.topics &&
                             article.topics.map((topic, i) => (

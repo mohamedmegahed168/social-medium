@@ -20,7 +20,7 @@ export default function CheckListItem({ checked, label }: listItems) {
         <div
           className={`w-5 h-5  rounded-full flex items-center justify-center ${
             checked
-              ? "bg-greenish border-none"
+              ? "bg-main-light border-none"
               : "bg-white border border-gray-300"
           }`}
         >

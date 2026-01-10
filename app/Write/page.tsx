@@ -21,6 +21,9 @@ interface PostFormData {
 
 // Default topics list
 const topics = [
+  "Culture",
+  "Religion",
+  "Productivity",
   "Technology",
   "Coding",
   "Science",
@@ -35,7 +38,6 @@ export default function NewPostEditor() {
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     control,
     formState: { errors },
@@ -43,23 +45,26 @@ export default function NewPostEditor() {
     defaultValues: {
       title: "",
       content: "",
-      topics: [], // Default selection
+      topics: [],
     },
     mode: "onChange",
   });
 
-  // Refs for manual resizing logic
   const router = useRouter();
+
+  /* Refs to handle resizing input elements*/
+
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
   const contentRef = useRef<HTMLTextAreaElement | null>(null);
+
+  /*using custom hooks to handle data fetching and updating*/
   const { user, userData } = useAuth();
   const { publishArticle, error: publishError } = usePublish();
   const [checkPublish, setCheckPublish] = useState<boolean>(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishedSuccess, setPublishedSuccess] = useState(false);
-  const [titleFocused, setTitleFocused] = useState(false);
-  const [contentFocused, setContentFocused] = useState(false);
-  // 3. Watch values to update the UI Sidebar dynamically
+
+  /* using React hook form to handle data monitoring*/
   const watchedTitle = useWatch({ control, name: "title" });
   const watchedContent = useWatch({ control, name: "content" });
   const watchedTopics = useWatch({ control, name: "topics" });
@@ -146,7 +151,7 @@ export default function NewPostEditor() {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-primary  min-h-screen flex flex-col transition-colors duration-200">
+    <div className=" text-primary  min-h-screen flex flex-col transition-colors duration-200">
       {/* HEADER */}
       <WriteHeader
         userName={userData?.userName}
@@ -160,17 +165,17 @@ export default function NewPostEditor() {
       <main className="flex-1 flex w-full">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 px-4 lg:px-8 py-8 h-full"
+          className="w-full max-w-[1500px] mx-auto grid grid-cols-1 sm:grid-cols-12 gap-6 lg:gap-10 px-4 lg:px-8 py-8 h-full"
         >
           {/* LEFT COLUMN: EDITOR */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="lg:col-span-8 rounded-2xl flex flex-col bg-white dark:bg-white/5  sm:rounded-2xl lg:shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-200 overflow-hidden relative"
+            className="lg:col-span-8 rounded-2xl flex flex-col bg-white  sm:rounded-2xl lg:shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-main-light overflow-hidden relative"
           >
-            <div className="flex-1 flex flex-col w-full">
-              <div className="px-8 sm:px-12 pt-12 pb-2 max-w-4xl mx-auto w-full">
+            <div className="flex-1 flex flex-col w-full ">
+              <div className="border-b border-main-light px-8 sm:px-8 pt-12 pb-2 max-w-4xl mx-auto w-full">
                 {/* TITLE INPUT */}
                 <div className="mb-6">
                   <motion.div className="relative rounded-2xl ">
@@ -183,15 +188,13 @@ export default function NewPostEditor() {
                         register("title").ref(e);
                         titleRef.current = e;
                       }}
-                      onFocus={() => setTitleFocused(true)}
-                      onBlur={() => setTitleFocused(false)}
                       onInput={(e) => {
                         handleResize(
                           e,
                           titleRef as React.MutableRefObject<HTMLTextAreaElement>
                         );
                       }}
-                      className="w-full bg-transparent text-2xl sm:text-3xl font-normal text-primary border-none focus:outline-none resize-none p-4 pt-10 pb-4 leading-[1.05] tracking-tight caret-green-600  transition-all"
+                      className="w-full bg-transparent text-2xl sm:text-3xl font-light focus:outline-none resize-none p-4 pt-10 pb-4 leading-[1.05] tracking-tight caret-main-light"
                       rows={1}
                       style={{ minHeight: "4.5rem" }}
                     />
@@ -205,18 +208,14 @@ export default function NewPostEditor() {
                 </div>
               </div>
 
-              {/* TOOLBAR (Sticky) */}
-              <div className=" bg-white/95 dark:bg-[#15231a]/95 backdrop-blur-md border-b border-gray-300 px-8 sm:px-12 py-3 transition-all w-full shadow-[0_4px_20px_-4px_rgba(0,0,0,0.02)]">
-                <div className="max-w-4xl mx-auto flex gap-1 items-center justify-between">
-                  {/* Word Count */}
-                  <span className="rounded-md text-sm text-secondary hidden sm:block bg-gray-50 dark:bg-white/5 px-3 py-2 rounded border-b border-gray-300">
+              {/* MAIN CONTENT AREA */}
+              <div className="px-8 sm:px-8 py-5 max-w-4xl mx-auto w-full flex-1 ">
+                {/* Word Count */}
+                <div className="w-full flex justify-end px-2">
+                  <span className="rounded-2xl text-sm text-secondary hidden sm:block bg-gray-50  px-3 py-2 rounded border border-main-light">
                     {words} words • {readingMinutes} min read
                   </span>
                 </div>
-              </div>
-
-              {/* MAIN CONTENT AREA */}
-              <div className="px-8 sm:px-12 py-10 max-w-4xl mx-auto w-full flex-1 ">
                 {publishError && <p> error: {publishError} </p>}
                 <motion.div className="relative">
                   <textarea
@@ -227,8 +226,6 @@ export default function NewPostEditor() {
                       register("content").ref(e);
                       contentRef.current = e;
                     }}
-                    onFocus={() => setContentFocused(true)}
-                    onBlur={() => setContentFocused(false)}
                     onInput={(e) => {
                       handleResize(
                         e,
@@ -259,10 +256,10 @@ export default function NewPostEditor() {
           >
             <div className="grid grid-cols-1 gap-6">
               {/* PUBLISHING STATUS CARD */}
-              <div className="order-last sm:order-first p-6 rounded-xl border border-gray-200 bg-white dark:bg-white/5 shadow-sm">
+              <div className="order-last sm:order-first p-6 rounded-xl border border-main-light bg-white shadow-sm">
                 <h3 className="text-sm font-bold text-primary mb-4  tracking-wider flex items-center justify-between">
                   Publishing Status
-                  <span className="text-sm bg-primary/10 text-primary px-2 py-1 font-normal rounded-full border border-gray-200">
+                  <span className="text-sm bg-white/10 text-primary px-2 py-1 font-normal rounded-full border border-main-light">
                     Draft
                   </span>
                 </h3>
@@ -285,7 +282,7 @@ export default function NewPostEditor() {
                   <CheckListItem checked={checkPublish} label="Click publish" />
                 </div>
                 {/* Progress Bar */}
-                <div className="mt-6 pt-5 border-t border-gray-300">
+                <div className="mt-6 pt-5 border-t border-main-light">
                   <div className="flex justify-between items-end mb-2">
                     <span className="text-xs font-semibold text-text-main">
                       Progress
@@ -296,7 +293,7 @@ export default function NewPostEditor() {
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-1.5 dark:bg-gray-700 overflow-hidden">
                     <motion.div
-                      className="bg-greenish h-1.5 rounded-full"
+                      className="bg-main-light h-1.5 rounded-full"
                       initial={{ width: 0 }}
                       animate={{ width: `${currentProgress}%` }}
                       transition={{ duration: 0.5 }}
@@ -306,12 +303,10 @@ export default function NewPostEditor() {
               </div>
 
               {/* TOPICS CARD */}
-              <div className="p-6 rounded-xl border border-gray-200 bg-white dark:bg-white/5 shadow-sm">
+              <div className="p-6 rounded-xl border border-main-light bg-white shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2 text-text-main">
-                    <span className="material-symbols-outlined text-[20px] text-primary">
-                      Topics
-                    </span>
+                    <span className=" text-2xl text-primary">Topics</span>
                   </div>
                 </div>
                 <p className="text-sm text-secondary mb-5 leading-snug">
@@ -330,8 +325,8 @@ export default function NewPostEditor() {
                         aria-pressed={isSelected}
                         className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all cursor-pointer border ${
                           isSelected
-                            ? "bg-greenish/10 hover:bg-greenish/20 border-primary/20"
-                            : " dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 border-gray-200"
+                            ? "bg-main-light hover:bg-main-dark hover:border-main-dark border-main-light text-white"
+                            : "  hover:bg-gray-100 border-gray-200"
                         }`}
                       >
                         <span

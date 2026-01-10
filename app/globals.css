@@ -9,13 +9,12 @@ html {
 }
 
 @theme inline {
-  --color-greenish: #17cf54;
+  --color-main-light: #17cf54;
   --color-light: #f7f4ed;
   --color-background-dark: #112116;
   --color-primary: #242424;
   --color-secondary: #6b6b6b;
-  /*--color-surface-light: #f0f4f2;*/
-  --color-surface-dark: #1c2e22;
+  --color-main-dark: #1c2e22;
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
   --font-mono: var(--font-mono);

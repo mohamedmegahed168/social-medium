@@ -1,5 +1,4 @@
 "use client";
-import FacebookIcon from "@/components/FacebookIcon";
 import GoogleIcon from "@/components/GoogleIcon";
 import Link from "next/link";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -7,6 +6,7 @@ import { auth, usersReference } from "@/lib/firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useSignInWithGoogle } from "../Hooks/UseSignInWithGoogle";
 import { FirebaseError } from "firebase/app";
 import { useState } from "react";
 export default function SignUp() {
@@ -28,6 +28,14 @@ export default function SignUp() {
   const router = useRouter();
   const [generalErrors, setGeneralErrors] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const { loginInWithGoogle, error } = useSignInWithGoogle();
+
+  async function HandleGoogleValidation() {
+    const success = await loginInWithGoogle();
+    if (success) {
+      router.push("/Dashboard");
+    }
+  }
   async function onSubmit(data: SignUp) {
     setGeneralErrors(null);
     const { email, userName, password } = data;
@@ -116,21 +124,13 @@ export default function SignUp() {
           <div className="  py-2">
             <div className="flex flex-col gap-4">
               <button
+                onClick={HandleGoogleValidation}
                 type="button"
                 className="w-full cursor-pointer bg-white border border-[#dce5df] px-4 py-2 rounded-2xl flex items-center justify-center gap-3 hover:shadow-sm transition-shadow"
               >
                 <GoogleIcon />
                 <span className="text-sm sm:text-base">
                   Sign up with Google
-                </span>
-              </button>
-              <button
-                type="button"
-                className="w-full cursor-pointer bg-white border border-[#dce5df] px-4 py-2 rounded-2xl flex items-center justify-center gap-3 hover:shadow-sm transition-shadow"
-              >
-                <FacebookIcon />
-                <span className="text-sm sm:text-base">
-                  Sign up with Facebook
                 </span>
               </button>
 
@@ -250,7 +250,7 @@ export default function SignUp() {
                   type="submit"
                   disabled={loading}
                   className={` flex items-center justify-center cursor-pointer  px-4 py-2  text-white rounded-2xl transition-colors ${
-                    loading ? "bg-[#1c2e22]" : "bg-greenish"
+                    loading ? "bg-main-dark" : "bg-main-light"
                   } hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[var(--color-greenish)] focus:ring-opacity-30`}
                 >
                   {loading ? (

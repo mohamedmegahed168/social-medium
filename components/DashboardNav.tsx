@@ -2,8 +2,10 @@ import Link from "next/link";
 import { Search, SquarePen } from "lucide-react";
 interface userData {
   userName: string;
+  userId: string;
 }
-export default function DashboardNav({ userName }: userData) {
+export default function DashboardNav({ userName, userId }: userData) {
+  console.log(userId);
   return (
     <nav className=" sticky top-0 z-50 w-full w-full bg-[#fdfbf7]/95 backdrop-blur-md border-b border-[#e0e0e0]">
       <div className=" px-4 md:px-0 h-16 mx-auto max-w-7xl flex  items-center justify-between ">
@@ -62,11 +64,13 @@ export default function DashboardNav({ userName }: userData) {
           <button className="bg-[#2d5e40] hover:bg-[#254f36] text-white text-sm font-bold px-5 py-2 rounded-full transition-colors shadow-sm hover:shadow-md">
             Sign out
           </button>
-          <div className="relative cursor-pointer group">
-            <div className="text-white flex items-center justify-center bg-center bg-[#1c2e22] bg-no-repeat bg-cover rounded-full size-9 border border-[#e0e0e0] group-hover:border-[#2d5e40] transition-colors">
-              {userName.charAt(0).toUpperCase()}
+          <Link href={`/Profile/${userId}`}>
+            <div className="relative cursor-pointer group">
+              <div className="text-white flex items-center justify-center bg-center bg-[#1c2e22] bg-no-repeat bg-cover rounded-full size-9 border border-[#e0e0e0] group-hover:border-[#2d5e40] transition-colors">
+                {userName.charAt(0).toUpperCase()}
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </nav>

@@ -1,17 +1,27 @@
 "use client";
 import Link from "next/link";
 import GoogleIcon from "@/components/GoogleIcon";
-import FacebookIcon from "@/components/FacebookIcon";
+import { Check } from "lucide-react";
 import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useSignInWithGoogle } from "../Hooks/UseSignInWithGoogle";
 export default function SignIn() {
   const [loading, setLoading] = useState<boolean>(false);
+  const [successful, setSuccessful] = useState<boolean>(false);
   const [generalErrors, setGeneralErrors] = useState<string>("");
+  const { loginInWithGoogle, error } = useSignInWithGoogle();
   const router = useRouter();
+
+  async function HandleGoogleValidation() {
+    const success = await loginInWithGoogle();
+    if (success) {
+      router.push("/Dashboard");
+    }
+  }
   interface SignIn {
     email: string;
     password: string;
@@ -30,6 +40,8 @@ export default function SignIn() {
     const { email, password } = data;
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      setSuccessful(true);
+      await new Promise((resolve) => setTimeout(resolve, 800));
       router.push("/Dashboard");
     } catch (error) {
       fireBaseErrors(error);
@@ -100,12 +112,11 @@ export default function SignIn() {
             </p>
           </div>
           <div className="flex flex-col gap-3">
-            <button className="bg-white cursor-pointer px-3 py-2 flex items-center justify-center rounded-2xl gap-2  ">
+            <button
+              onClick={HandleGoogleValidation}
+              className="bg-white cursor-pointer px-3 py-2 flex items-center justify-center rounded-2xl gap-2  "
+            >
               <GoogleIcon /> Sign in with google
-            </button>
-            <button className="bg-white cursor-pointer px-3 py-2 flex items-center justify-center rounded-2xl gap-2">
-              <FacebookIcon />
-              Sign in with facebook
             </button>
           </div>
           <div className="relative flex items-center justify-center py-2">
@@ -120,7 +131,10 @@ export default function SignIn() {
             className="flex flex-col gap-3"
             onSubmit={handleSubmit(onSubmit)}
           >
-            {generalErrors && <p className="text-red-700"> {generalErrors} </p>}
+            {generalErrors ||
+              (error && (
+                <p className="text-red-700"> {generalErrors || error} </p>
+              ))}
             <div className="flex flex-col">
               <label htmlFor="email" className="text-secondary">
                 email:
@@ -190,7 +204,7 @@ export default function SignIn() {
                 className={`flex items-center justify-center  text-white px-3 py-2 rounded-2xl ${
                   loading
                     ? "bg-[#1c2e22] cursor-not-allowed"
-                    : "bg-greenish cursor-pointer hover:bg-[#1c2e22] transition-colors"
+                    : "bg-main-light cursor-pointer hover:bg-[#1c2e22] transition-colors"
                 }`}
                 type="submit"
               >
@@ -199,6 +213,10 @@ export default function SignIn() {
                     <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     Signing you in...
                   </>
+                ) : successful ? (
+                  <span className="flex items-center justify-center">
+                    Signed in successfually <Check />
+                  </span>
                 ) : (
                   "Sign In"
                 )}

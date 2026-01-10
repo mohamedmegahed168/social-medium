@@ -1,11 +1,11 @@
 "use client";
 import { ThumbsUp } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { useToggleLike } from "@/app/Hooks/UseToggleLike";
 interface LikeProps {
   articleId: string;
   likes: string[];
-  userId: string;
+  userId?: string;
   likesCount: number;
 }
 export default function HandleLikes({

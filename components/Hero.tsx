@@ -15,7 +15,7 @@ export default function Hero() {
                 <span className="flex items-center justify-center size-5 rounded-full bg-[#17cf54]/20 text-[#17cf54]">
                   <Sparkles className="size-3" />
                 </span>
-                <span className="text-sm font-sans font-medium text-gray-200 tracking-wide">
+                <span className="text-sm font-medium text-gray-200 tracking-wide">
                   Daily curated wisdom
                 </span>
               </div>
@@ -30,7 +30,7 @@ export default function Hero() {
               </div>
               {/* third component*/}
               <div>
-                <p className="text-lg md:text-xl font-sans font-normal text-gray-400 leading-relaxed max-w-xl">
+                <p className="text-lg md:text-xl font-normal text-gray-400 leading-relaxed max-w-xl">
                   Escape the algorithm. Chronicle is your sanctuary for deep
                   thinking, bringing you substantial stories on culture,
                   innovation, and the future—free from distraction.

@@ -4,9 +4,12 @@ import {
   orderBy,
   query,
   where,
+  Query,
+  DocumentData,
 } from "firebase/firestore";
 import { articlesReference } from "@/lib/firebase";
 import { useEffect, useState } from "react";
+
 export interface Article {
   id: string;
   title: string;
@@ -28,32 +31,63 @@ export function useGetArticles(
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let q;
+    let unsubscribe: (() => void) | undefined;
 
-    if (!selectedTab || selectedTab === "All") {
-      q = query(articlesReference, orderBy("createdAt", "desc"));
-    } else if (selectedTab === "My Articles") {
-      q = query(
-        articlesReference,
-        where("authorId", "==", userId),
-        orderBy("createdAt", "desc")
-      );
-    } else {
-      q = query(
-        articlesReference,
-        where("topics", "array-contains", selectedTab),
-        orderBy("createdAt", "desc")
-      );
-    }
-    const unSubscribe = onSnapshot(q, (snapshot) => {
-      const articlesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...(doc.data() as Omit<Article, "id">),
-      }));
-      setArticles(articlesData);
-      setLoading(false);
-    });
-    return () => unSubscribe();
+    const subscribeToArticles = () => {
+      setLoading(true);
+
+      if (selectedTab === "My Articles" && !userId) {
+        setArticles([]);
+        setLoading(false);
+        return;
+      }
+
+      let q: Query<DocumentData>;
+
+      try {
+        if (!selectedTab || selectedTab === "All") {
+          q = query(articlesReference, orderBy("createdAt", "desc"));
+        } else if (selectedTab === "My Articles") {
+          q = query(
+            articlesReference,
+            where("authorId", "==", userId),
+            orderBy("createdAt", "desc")
+          );
+        } else {
+          q = query(
+            articlesReference,
+            where("topics", "array-contains", selectedTab),
+            orderBy("createdAt", "desc")
+          );
+        }
+
+        unsubscribe = onSnapshot(
+          q,
+          (snapshot) => {
+            const articlesData = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...(doc.data() as Omit<Article, "id">),
+            }));
+            setArticles(articlesData);
+            setLoading(false);
+          },
+          (err) => {
+            console.error("Snapshot Error:", err);
+            setLoading(false);
+          }
+        );
+      } catch (err) {
+        console.error("Error constructing query:", err);
+        setLoading(false);
+      }
+    };
+    subscribeToArticles();
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, [selectedTab, userId]);
+
   return { articles, loading };
 }

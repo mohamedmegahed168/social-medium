@@ -16,7 +16,7 @@ export default function WriteHeader({
   onPublish,
 }: publishData) {
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 h-[69px]">
+    <header className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-white  border-b border-main-light h-[69px]">
       <div className="flex items-center gap-6 text-text-main">
         <Link className="flex items-center gap-2 group" href="/">
           <h2 className="text-xl font-bold tracking-tight group-hover:opacity-80 transition-opacity font-sans">
@@ -27,7 +27,7 @@ export default function WriteHeader({
       <div className="flex items-center gap-3">
         <Link
           href="/Dashboard"
-          className="flex items-center justify-center rounded-full h-9 px-5 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 text-primary text-sm font-medium transition-colors border border-gray-400 shadow-sm outline-none"
+          className="flex items-center justify-center rounded-full h-9 px-5 bg-white hover:bg-gray-50  text-primary text-sm font-medium transition-colors border border-main-light shadow-sm outline-none"
         >
           Dashboard
         </Link>
@@ -38,7 +38,7 @@ export default function WriteHeader({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.95 }}
               transition={{ duration: 0.25 }}
-              className="ml-2 px-3 py-1 rounded-full bg-greenish/90 text-white text-sm flex items-center gap-2"
+              className="ml-2 px-3 py-1 rounded-full bg-main-light/90 text-white text-sm flex items-center gap-2"
             >
               <Check className="size-4" />
               Saved
@@ -52,7 +52,7 @@ export default function WriteHeader({
           aria-disabled={isPublishing || !canPublish}
           className={`flex hidden sm:flex items-center cursor-pointer justify-center rounded-full h-9 px-5 text-sm font-medium transition-colors shadow-sm ${
             isPublishing || !canPublish
-              ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+              ? "bg-gray-300 text-gray-600 cursor-auto"
               : "bg-[#2d5e40] hover:bg-green-600 text-white"
           }`}
         >
