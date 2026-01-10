@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import GoogleIcon from "@/components/GoogleIcon";
-import { Check } from "lucide-react";
+import { Check, BookOpen } from "lucide-react";
 import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -82,10 +82,15 @@ export default function SignIn() {
   return (
     <div className="bg-gray-50 min-h-screen h-full flex flex-col">
       <header className="bg-white border-b border-[#dce5df] flex justify-between items-center px-2 py-3 sm:px-5">
-        <div>
-          <Link href="/" className="text-xl md:text-2xl font-bold">
-            {" "}
-            Social Medium{" "}
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-light)] text-[var(--color-primary)] font-bold">
+            <BookOpen />
+          </span>
+          <Link
+            href="/"
+            className="text-xl sm:text-2xl font-semibold leading-none"
+          >
+            Social Medium
           </Link>
         </div>
         <div className="flex sm:gap-2">

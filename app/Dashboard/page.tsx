@@ -48,10 +48,7 @@ export default function BlogDashboard() {
 
   useEffect(() => {
     if (articlesLoading) {
-      // show loader on next tick to avoid synchronous setState in effect (prevents cascading renders)
       const startTimer = setTimeout(() => setShowLoader(true), 0);
-
-      // safety timeout to avoid stuck loader in case of unexpected failures
       if (loaderTimeoutRef.current) {
         clearTimeout(loaderTimeoutRef.current);
       }
@@ -70,7 +67,6 @@ export default function BlogDashboard() {
       };
     }
 
-    // keep loader visible a short time after load to avoid flicker
     const t = setTimeout(() => setShowLoader(false), 350);
     if (loaderTimeoutRef.current) {
       clearTimeout(loaderTimeoutRef.current);
@@ -369,6 +365,7 @@ export default function BlogDashboard() {
                                 articleId={article.id}
                                 userId={user.uid}
                                 authorId={article.authorId}
+                                userData={userData}
                               />
                             </div>
                           )}

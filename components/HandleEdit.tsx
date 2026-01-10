@@ -4,11 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { DocumentData } from "firebase/firestore";
 
 interface ArticleData {
   articleId: string;
   userId: string;
   authorId: string;
+  userData: DocumentData | null | undefined;
 }
 
 interface ClientPortalProps {
@@ -24,6 +26,7 @@ export default function HandleEdit({
   articleId,
   userId,
   authorId,
+  userData,
 }: ArticleData) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -38,10 +41,13 @@ export default function HandleEdit({
     };
   }, []);
 
-  const isAuthorized = authorId === userId;
+  if (!userData || !userId) return null;
+  const isOwner = authorId === userId;
+  const isAdmin = userData.role === "admin";
+  if (!isAdmin || !isOwner) return null;
 
   function confirmEdit() {
-    if (!isAuthorized || !articleId) return;
+    if ((!isOwner && !isAdmin) || !articleId) return;
     setIsLoading(true);
     timeoutRef.current = setTimeout(() => {
       router.push(`/Edit/${articleId}`);
@@ -59,22 +65,24 @@ export default function HandleEdit({
 
   const handleOpenClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isAuthorized) {
+    if (isOwner) {
       setShowModal(true);
     }
   };
 
   return (
     <>
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.98 }}
-        className="rounded-full cursor-pointer p-2 hover:bg-main-dark transition-colors duration-200"
-        disabled={!isAuthorized}
-        onClick={handleOpenClick}
-      >
-        <Pencil size={20} />
-      </motion.button>
+      {(isAdmin || isOwner) && (
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.98 }}
+          className="rounded-full cursor-pointer p-2 hover:bg-main-dark transition-colors duration-200"
+          disabled={!isOwner}
+          onClick={handleOpenClick}
+        >
+          <Pencil size={20} />
+        </motion.button>
+      )}
 
       <AnimatePresence mode="wait">
         {showModal && (

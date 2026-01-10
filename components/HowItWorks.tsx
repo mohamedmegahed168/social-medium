@@ -313,7 +313,7 @@ export default function LandingPage() {
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <Link href="/" className="flex items-center gap-2 text-[#111813]">
               <BookOpen className="size-6 text-[#17cf54]" />
-              <span className="text-lg font-bold">BlogPlatform</span>
+              <span className="text-lg font-bold">Social Medium</span>
             </Link>
 
             <nav className="flex flex-wrap items-center justify-center gap-8">

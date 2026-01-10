@@ -10,7 +10,7 @@ import HandleLikes from "@/components/HandleLikes";
 import HandleDeletes from "@/components/HandleDeletes";
 import HandleEdit from "@/components/HandleEdit";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Clock, ChevronDown } from "lucide-react";
+import { Search, Clock, ChevronDown, BookOpen } from "lucide-react";
 
 const footerLinks = ["About", "Help", "Terms", "Privacy", "Careers"];
 
@@ -38,18 +38,13 @@ export default function UserProfile() {
           {/* Left */}
           <div className="flex items-center gap-4 sm:gap-12">
             <Link href="/" className="flex items-center gap-3">
-              <div className="size-8 text-[#4ade80]">
-                <svg
-                  fill="currentColor"
-                  viewBox="0 0 48 48"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" />
-                </svg>
+              <div className=" text-main-light flex items-center justify-center gap-3">
+                <BookOpen />
+
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+                  Social Medium{" "}
+                </h2>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
-                Social Medium{" "}
-              </h2>
             </Link>
 
             <div className="hidden sm:block">
@@ -149,7 +144,6 @@ export default function UserProfile() {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Main Content */}
       <main className="max-w-[1440px] mx-auto px-10 pt-16 pb-32">
         <div className="flex flex-col lg:flex-row gap-20">
           {/* Articles Section */}
@@ -161,7 +155,6 @@ export default function UserProfile() {
                 </h1>
               )}
 
-              {/* Compact intro box for small/medium screens; desktop keeps the sidebar */}
               <div className="lg:hidden bg-white/3 border border-white/6 rounded-xl p-3">
                 <div className="flex items-center gap-4">
                   <div className="flex-shrink-0">
@@ -271,6 +264,7 @@ export default function UserProfile() {
                                   articleId={article.id}
                                   userId={currentUser.uid}
                                   authorId={article.authorId}
+                                  userData={userData}
                                 />
                               </div>
                             )}
@@ -341,14 +335,13 @@ export default function UserProfile() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
-              <div className="size-7 text-[#4ade80]">
-                <svg fill="currentColor" viewBox="0 0 48 48">
-                  <path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" />
-                </svg>
+              <div className=" text-main-light flex items-center justify-center gap-3">
+                <BookOpen />
+
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+                  Social Medium{" "}
+                </h2>
               </div>
-              <h2 className="text-2xl font-bold tracking-tight text-white">
-                BlogSpace
-              </h2>
             </Link>
 
             {/* Links */}

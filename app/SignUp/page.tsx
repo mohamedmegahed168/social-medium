@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useSignInWithGoogle } from "../Hooks/UseSignInWithGoogle";
 import { FirebaseError } from "firebase/app";
 import { useState } from "react";
+import { BookOpen } from "lucide-react";
 export default function SignUp() {
   interface SignUp {
     email: string;
@@ -93,7 +94,7 @@ export default function SignUp() {
       <header className="bg-white border-b border-solid border-[#dce5df] rounded-lg px-4 py-2 flex justify-between ">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-light)] text-[var(--color-primary)] font-bold">
-            S
+            <BookOpen />
           </span>
           <Link
             href="/"
@@ -123,6 +124,7 @@ export default function SignUp() {
           </div>
           <div className="  py-2">
             <div className="flex flex-col gap-4">
+              {error && <p className="text-sm text-red-500">{error} </p>}
               <button
                 onClick={HandleGoogleValidation}
                 type="button"

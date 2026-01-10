@@ -28,6 +28,13 @@ export default function HandleDeletes({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
   if (!userData || !userId) return null;
   const isOwner = userId === authorId;
   const isAdmin = userData.role === "admin";
@@ -57,7 +64,6 @@ export default function HandleDeletes({
     setShowModal(false);
   };
 
-  console.log(isAdmin, userData);
   return (
     <>
       {(isAdmin || isOwner) && (
