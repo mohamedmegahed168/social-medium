@@ -24,13 +24,13 @@ export default function HandleLikes({
     <motion.button
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.98 }}
-      className="flex rounded-full p-2 hover:bg-[#f4f1ea] transition-colors"
+      className="flex rounded-full cursor-pointer p-2 hover:bg-main-dark transition-colors"
       onClick={handleClick}
     >
       <ThumbsUp
         size={20}
         color={isLiked ? "#254f36" : "currentColor"}
-        fill={isLiked ? "#2d5e4090" : "none"}
+        fill={isLiked ? "" : "none"}
         className="transition-colors duration-300"
       />
       {likesCount !== 0 && likesCount && <span> {likesCount}</span>}

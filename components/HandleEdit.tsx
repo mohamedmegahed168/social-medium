@@ -69,7 +69,7 @@ export default function HandleEdit({
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.98 }}
-        className="rounded-full p-2 hover:bg-main-dark transition-colors duration-200"
+        className="rounded-full cursor-pointer p-2 hover:bg-main-dark transition-colors duration-200"
         disabled={!isAuthorized}
         onClick={handleOpenClick}
       >
@@ -95,13 +95,12 @@ export default function HandleEdit({
                 className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden border border-gray-200"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Header with icon */}
-                <div className="p-6 text-center bg-gradient-to-br from-blue-50 to-blue-100">
+                <div className="p-6 text-center bg-gradient-to-br from-green-50 to-green-100">
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-                    className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 mb-4"
+                    className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-main-dark mb-4"
                   >
                     <SquarePen className="h-7 w-7 text-white" />
                   </motion.div>
@@ -121,7 +120,6 @@ export default function HandleEdit({
                   </motion.div>
                 </div>
 
-                {/* Action buttons */}
                 <div className="bg-gray-50 px-6 py-4 flex gap-3 justify-center border-t border-gray-200">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
@@ -135,7 +133,7 @@ export default function HandleEdit({
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2.5 bg-main-dark text-white rounded-lg hover:bg-black font-medium text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={confirmEdit}
                     disabled={isLoading}
                   >

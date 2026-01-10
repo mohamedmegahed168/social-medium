@@ -22,11 +22,12 @@ export default function UserProfile() {
   const { articles, loading } = useGetArticles("My Articles", profileId);
   const router = useRouter();
   const isOwnProfile = currentUser?.uid === profileId;
+
   useEffect(() => {
-    if (!authLoading && !currentUser) {
+    if (!authLoading && !currentUser && !userData) {
       router.push("/SignIn");
     }
-  }, [currentUser, authLoading, router]);
+  }, [currentUser, authLoading, router, userData]);
 
   // Note: article loading is handled inline with skeletons instead of a full-page return so the header and profile stay visible while fetching.
   return (
@@ -35,7 +36,7 @@ export default function UserProfile() {
       <header className="sticky top-0 z-50 bg-[#0f1110]/90 backdrop-blur-md border-b border-white/5">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between px-10 py-5">
           {/* Left */}
-          <div className="flex items-center gap-12">
+          <div className="flex items-center gap-4 sm:gap-12">
             <Link href="/" className="flex items-center gap-3">
               <div className="size-8 text-[#4ade80]">
                 <svg
@@ -46,25 +47,27 @@ export default function UserProfile() {
                   <path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
                 Social Medium{" "}
               </h2>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-10">
+            <div className="hidden sm:block">
               <Link
                 href="/Dashboard"
                 className="text-sm font-medium hover:text-[#4ade80] transition-colors text-white/70"
               >
                 Dashboard
               </Link>
+            </div>
+            <div className="hidden sm:block">
               <Link
                 href="/Write"
                 className="text-sm font-medium hover:text-[#4ade80] transition-colors text-white/70"
               >
                 Write
               </Link>
-            </nav>
+            </div>
           </div>
 
           {/* Right */}
@@ -76,6 +79,14 @@ export default function UserProfile() {
                 placeholder="Search articles, topics, or people"
                 type="text"
               />
+            </div>
+            <div className="block sm:hidden">
+              <Link
+                href="/Dashboard"
+                className="text-sm font-medium hover:text-[#4ade80] transition-colors text-white/70"
+              >
+                Dashboard
+              </Link>
             </div>
             <Link href={`/Profile/${currentUser?.uid}`}>
               <div className="text-white border-2 border-[#4ade80]/50 text-2xl font-bold  flex items-center justify-center size-10 rounded-full bg-cover bg-center border border-white/10 cursor-pointer">
@@ -143,21 +154,45 @@ export default function UserProfile() {
         <div className="flex flex-col lg:flex-row gap-20">
           {/* Articles Section */}
           <div className="flex-1 order-2 lg:order-1 max-w-[900px]">
-            {/* Title + Mobile Buttons */}
-            <div className="flex items-center justify-between mb-10">
+            <div className="mb-4">
               {profile && (
-                <h1 className="text-5xl font-bold tracking-tight">
-                  {" "}
-                  {profile.userName}{" "}
+                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight mb-3">
+                  {profile.userName}
                 </h1>
               )}
+
+              {/* Compact intro box for small/medium screens; desktop keeps the sidebar */}
+              <div className="lg:hidden bg-white/3 border border-white/6 rounded-xl p-3">
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center bg-[#1c2e22] text-white text-2xl md:text-3xl font-bold border-2 border-[#4ade80]/30">
+                      {profile ? profile.userName.charAt(0).toUpperCase() : "U"}
+                    </div>
+                  </div>
+
+                  <div className="flex-1">
+                    <p className="text-sm text-white/60 mt-1 line-clamp-2">
+                      {profile?.bio ||
+                        "No bio yet. This user hasn't added a bio."}
+                    </p>
+
+                    <div className="mt-3 flex items-center gap-4 text-sm text-white/60">
+                      <div className="flex items-baseline gap-2">
+                        <div className="text-base font-bold text-white">
+                          {articles.length}
+                        </div>
+                        <div className="text-xs">Articles</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Articles */}
             <div className="space-y-12">
               <div className="flex flex-col gap-8">
                 {loading ? (
-                  // inline skeletons while articles load
                   [1, 2, 3].map((i) => (
                     <div
                       key={i}
@@ -199,37 +234,37 @@ export default function UserProfile() {
                           </span>
                         </div>
 
-                        <Link href="#" className="block">
-                          <h3 className="text-3xl lg:text-4xl font-bold group-hover:text-[#4ade80] transition-colors leading-tight">
-                            {article.title}
-                          </h3>
-                        </Link>
+                        <h3 className="text-3xl lg:text-4xl font-bold group-hover:text-[#4ade80] transition-colors leading-tight">
+                          {article.title}
+                        </h3>
 
                         <p className="text-white/60 line-clamp-3">
                           {article.content}
                         </p>
 
                         <div className="flex items-center justify-between pt-6">
-                          <div className="flex items-center gap-6 text-sm text-white/40">
+                          <div className="flex items-center  text-sm text-white/40 ">
                             <span className="flex items-center gap-2">
                               <Clock className="size-5" />
                               {article.createdAt?.toDate().toLocaleDateString()}
                             </span>
-                            <span className="flex items-center gap-2">
+                          </div>
+                          <div className="flex items-center">
+                            <div className="flex items-center ">
                               <HandleLikes
                                 articleId={article.id}
                                 likes={article.likes || []}
                                 userId={currentUser?.uid}
                                 likesCount={article.likesCount || 0}
                               />
-                              {article.likesCount}
-                            </span>
+                            </div>
                             {isOwnProfile && (
                               <div>
                                 <HandleDeletes
                                   articleId={article.id}
                                   authorId={article.authorId}
                                   userId={currentUser.uid}
+                                  userData={userData}
                                 />
 
                                 <HandleEdit
@@ -240,7 +275,6 @@ export default function UserProfile() {
                               </div>
                             )}
                           </div>
-                          <div className="flex items-center gap-4 text-white/40"></div>
                         </div>
                       </div>
 
@@ -295,19 +329,6 @@ export default function UserProfile() {
                   <div className="text-lg font-bold">{articles.length}</div>
                   <div className="text-xs text-white/50">Articles</div>
                 </div>
-
-                <div className="text-center">
-                  <div className="text-lg font-bold">—</div>
-                  <div className="text-xs text-white/50">—</div>
-                </div>
-              </div>
-
-              <div className="mt-4 text-xs text-white/50">
-                {profile?.joinedAt
-                  ? `Member since ${new Date(
-                      profile.joinedAt
-                    ).toLocaleDateString()}`
-                  : ""}
               </div>
             </motion.div>
           </aside>

@@ -34,7 +34,6 @@ export default function BlogDashboard() {
     user?.uid
   );
   const trendingArticles = useTrendingArticles();
-
   const listVariants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.06 } },
@@ -159,14 +158,14 @@ export default function BlogDashboard() {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          className="relative w-full max-w-7xl flex-1 px-4 md:px-10 py-8 lg:border-r border-[#e0e0e0]"
+          className="relative w-full max-w-7xl flex-1 px-4 md:px-10 py-4 lg:border-r border-[#e0e0e0]"
         >
           {/* Tabs */}
-          <div className="relative sm:sticky sm:top-16 sm:z-40 bg-[#fdfbf7]/95 backdrop-blur-sm -mx-4 px-4 md:-mx-10 md:px-10 pb-4 pt-2 border-b border-[#e0e0e0] mb-8">
+          <div className="relative sm:sticky sm:top-16 sm:z-40 bg-[#fdfbf7]/95 backdrop-blur-sm -mx-4 px-4 md:-mx-10 md:px-10 pb-4  border-b border-[#e0e0e0] mb-4">
             <div
               role="tablist"
               aria-label="Article filters"
-              className="flex items-center justify-start gap-3 overflow-x-auto md:overflow-visible md:flex-wrap md:whitespace-normal no-scrollbar md:px-0"
+              className="flex items-center justify-start gap-3 overflow-x-auto md:overflow-visible md:flex-wrap md:whitespace-normal no-scrollbar"
             >
               {tabs.map((tab) => {
                 const activeTab = selectedTab === tab;
@@ -291,18 +290,22 @@ export default function BlogDashboard() {
                   <div className="flex flex-1 flex-col gap-2.5">
                     {/* Author Info */}
                     <div className="flex items-center gap-3 mb-1">
-                      <div className="bg-center text-center bg-no-repeat bg-cover bg-[#1c2e22] text-white rounded-full size-8 ring-2 ring-white flex items-center justify-center text-sm font-bold">
-                        {article.authorName
-                          ? article.authorName.charAt(0).toUpperCase()
-                          : "U"}
-                      </div>
+                      <Link href={`/Profile/${article.authorId}`}>
+                        <div className="bg-center text-center bg-no-repeat bg-cover bg-[#1c2e22] text-white rounded-full size-8 ring-2 ring-white flex items-center justify-center text-sm font-bold">
+                          {article.authorName
+                            ? article.authorName.charAt(0).toUpperCase()
+                            : "U"}
+                        </div>
+                      </Link>
                       {article.createdAt && (
                         <div>
                           <div className="text-sm text-[#6b6b6b]">
                             Written by{" "}
-                            <span className="font-semibold text-[#222222]">
-                              {article.authorName}
-                            </span>
+                            <Link href={`/Profile/${article.authorId}`}>
+                              <span className="font-semibold text-[#222222]">
+                                {article.authorName}
+                              </span>
+                            </Link>
                           </div>
                           <div className="text-xs text-[#6b6b6b] mt-0.5">
                             {article.createdAt
@@ -353,19 +356,22 @@ export default function BlogDashboard() {
                             userId={user?.uid}
                             likesCount={article.likesCount || 0}
                           />
-                          <div>
-                            <HandleDeletes
-                              articleId={article.id}
-                              authorId={article.authorId}
-                              userId={user.uid}
-                            />
-                          </div>
+                          {article.authorId === user.uid && (
+                            <div>
+                              <HandleDeletes
+                                articleId={article.id}
+                                authorId={article.authorId}
+                                userId={user.uid}
+                                userData={userData}
+                              />
 
-                          <HandleEdit
-                            articleId={article.id}
-                            userId={user.uid}
-                            authorId={article.authorId}
-                          />
+                              <HandleEdit
+                                articleId={article.id}
+                                userId={user.uid}
+                                authorId={article.authorId}
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

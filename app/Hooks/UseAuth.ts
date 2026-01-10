@@ -7,6 +7,7 @@ interface userInterface {
   loading: boolean;
   userData: DocumentData | null;
   error: string | null;
+  role?: "user" | "admin";
 }
 interface userInfo {
   userName: string;

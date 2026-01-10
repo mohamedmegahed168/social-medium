@@ -3,10 +3,12 @@ import { useDeleteArticle } from "@/app/Hooks/UseDeleteArticle";
 import { createPortal } from "react-dom";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DocumentData } from "firebase/firestore";
 interface DeleteInfo {
   articleId: string;
   authorId: string;
   userId: string;
+  userData: DocumentData | null | undefined;
 }
 interface ClientPortalProps {
   children: React.ReactNode;
@@ -20,14 +22,17 @@ export default function HandleDeletes({
   articleId,
   authorId,
   userId,
+  userData,
 }: DeleteInfo) {
   const { deleteArticle, loading } = useDeleteArticle();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
+  if (!userData || !userId) return null;
+  const isOwner = userId === authorId;
+  const isAdmin = userData.role === "admin";
   async function deleteHandler() {
-    if (authorId !== userId) {
+    if (!isOwner && !isAdmin) {
       return;
     }
     try {
@@ -52,22 +57,19 @@ export default function HandleDeletes({
     setShowModal(false);
   };
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
+  console.log(isAdmin, userData);
   return (
     <>
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.98 }}
-        className="rounded-full p-2 hover:bg-main-dark transition-colors"
-        onClick={() => setShowModal(true)}
-      >
-        <Trash2 size={20} />
-      </motion.button>
+      {(isAdmin || isOwner) && (
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.98 }}
+          className="rounded-full cursor-pointer p-2 hover:bg-main-dark transition-colors"
+          onClick={() => setShowModal(true)}
+        >
+          <Trash2 size={20} />
+        </motion.button>
+      )}
       <AnimatePresence mode="wait">
         {showModal && (
           <ClientPortal>

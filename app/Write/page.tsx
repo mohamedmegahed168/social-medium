@@ -57,7 +57,6 @@ export default function NewPostEditor() {
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
   const contentRef = useRef<HTMLTextAreaElement | null>(null);
 
-  /*using custom hooks to handle data fetching and updating*/
   const { user, userData } = useAuth();
   const { publishArticle, error: publishError } = usePublish();
   const [checkPublish, setCheckPublish] = useState<boolean>(false);
@@ -118,7 +117,6 @@ export default function NewPostEditor() {
       }
     }
   }
-  console.log("hello");
   function isTopicSelected(topic: string) {
     const selectedTopic = watchedTopics?.includes(topic);
     return selectedTopic;
@@ -175,7 +173,7 @@ export default function NewPostEditor() {
             className="lg:col-span-8 rounded-2xl flex flex-col bg-white  sm:rounded-2xl lg:shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-main-light overflow-hidden relative"
           >
             <div className="flex-1 flex flex-col w-full ">
-              <div className="border-b border-main-light px-8 sm:px-8 pt-12 pb-2 max-w-4xl mx-auto w-full">
+              <div className="border-b border-main-light px-2 sm:px-8 pt-12 pb-2 max-w-4xl mx-auto w-full">
                 {/* TITLE INPUT */}
                 <div className="mb-6">
                   <motion.div className="relative rounded-2xl ">
@@ -194,7 +192,7 @@ export default function NewPostEditor() {
                           titleRef as React.MutableRefObject<HTMLTextAreaElement>
                         );
                       }}
-                      className="w-full bg-transparent text-2xl sm:text-3xl font-light focus:outline-none resize-none p-4 pt-10 pb-4 leading-[1.05] tracking-tight caret-main-light"
+                      className="w-full bg-transparent text-2xl sm:text-3xl font-light focus:outline-none resize-none  pt-10 pb-4 leading-[1.05] tracking-tight caret-main-light"
                       rows={1}
                       style={{ minHeight: "4.5rem" }}
                     />
@@ -209,10 +207,10 @@ export default function NewPostEditor() {
               </div>
 
               {/* MAIN CONTENT AREA */}
-              <div className="px-8 sm:px-8 py-5 max-w-4xl mx-auto w-full flex-1 ">
+              <div className="px-2 sm:px-8 py-5 max-w-4xl mx-auto w-full flex-1 ">
                 {/* Word Count */}
-                <div className="w-full flex justify-end px-2">
-                  <span className="rounded-2xl text-sm text-secondary hidden sm:block bg-gray-50  px-3 py-2 rounded border border-main-light">
+                <div className="w-full flex justify-start sm:justify-end px-2">
+                  <span className="rounded-2xl text-sm text-secondary sm:block bg-gray-50  px-3 py-2 rounded border border-main-light">
                     {words} words • {readingMinutes} min read
                   </span>
                 </div>
@@ -232,7 +230,7 @@ export default function NewPostEditor() {
                         contentRef as React.MutableRefObject<HTMLTextAreaElement>
                       );
                     }}
-                    className="w-full bg-transparent text-lg leading-8 text-primary focus:outline-none resize-none p-6 rounded-md min-h-[320px] caret-green-600 transition-all"
+                    className="w-full bg-transparent text-lg leading-8 text-primary focus:outline-none resize-none py-6 rounded-md min-h-[320px] caret-green-600 transition-all"
                     placeholder="Tell your story..."
                     style={{ minHeight: "320px" }}
                   />
