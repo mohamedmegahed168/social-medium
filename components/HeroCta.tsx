@@ -36,9 +36,12 @@ export default function CallToAction() {
                 >
                   Start Writing Now
                 </Link>
-                <button className="inline-flex items-center justify-center h-14 px-8 rounded-xl bg-transparent border border-[#dce5df] text-[#111813] text-base font-bold hover:bg-gray-50 transition-colors">
+                <Link
+                  href="#ourStory"
+                  className="inline-flex items-center justify-center h-14 px-8 rounded-xl bg-transparent border border-[#dce5df] text-[#111813] text-base font-bold hover:bg-gray-50 transition-colors"
+                >
                   Learn More
-                </button>
+                </Link>
               </div>
             </div>
 

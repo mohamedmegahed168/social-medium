@@ -175,7 +175,7 @@ export default function LandingPage() {
                   </motion.div>
                   <motion.div variants={cardInternalTextVariants}>
                     <Link
-                      href="/Dashboard"
+                      href="/SignUp"
                       className="w-fit group flex items-center gap-2 text-white font-bold bg-[#17cf54] hover:bg-[#12a543] px-6 py-3 rounded-lg transition-all shadow-lg shadow-green-900/20"
                     >
                       Explore Trending Topics
@@ -207,22 +207,23 @@ export default function LandingPage() {
                         </p>
                       </motion.div>
                     ))}
+                    <Link href="/SignUp" className="col-span-2">
+                      <motion.div
+                        variants={gridItemVariants}
+                        className="bg-[#17cf54] p-4 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#12a543] transition-colors shadow-lg shadow-green-500/20 group"
+                      >
+                        <div>
+                          <p className="text-[#052e16] font-extrabold text-sm">
+                            Get Started
+                          </p>
 
-                    {/* View All Card */}
-                    <motion.div
-                      variants={gridItemVariants}
-                      className="col-span-2 bg-[#17cf54] p-4 rounded-xl flex items-center justify-between cursor-pointer hover:bg-[#12a543] transition-colors shadow-lg shadow-green-500/20 group"
-                    >
-                      <Link href="/SignUp">
-                        <p className="text-[#052e16] font-extrabold text-sm">
-                          Get Started
-                        </p>
-                        <p className="text-[#052e16]/70 text-xs">
-                          Discover more topics
-                        </p>
-                      </Link>
-                      <ArrowRight className="size-5 text-[#052e16] group-hover:translate-x-1 transition-transform" />
-                    </motion.div>
+                          <p className="text-[#052e16]/70 text-xs">
+                            Discover more topics
+                          </p>
+                        </div>
+                        <ArrowRight className="size-5 text-[#052e16] group-hover:translate-x-1 transition-transform" />
+                      </motion.div>
+                    </Link>
                   </motion.div>
                 </div>
               </div>

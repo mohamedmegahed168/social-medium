@@ -204,11 +204,11 @@ export default function EditPage() {
             onClick={handleSubmit(onSubmit)}
             disabled={loading || saveSuccess}
             className={`
-    px-4 py-1.5 rounded-full text-sm font-medium transition-all
+    px-4 py-1.5 rounded-full text-sm font-medium cursor-pointer transition-all
     ${
       !loading && !saveSuccess
         ? "bg-[#2d5e40] text-white hover:bg-[#1a3625] shadow-sm"
-        : "bg-gray-200 text-gray-400 cursor-not-allowed"
+        : "bg-gray-200 text-gray-400 cursor-auto"
     }
   `}
           >

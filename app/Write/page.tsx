@@ -180,7 +180,7 @@ export default function NewPostEditor() {
                     <textarea
                       id="post-title"
                       aria-label="Post title"
-                      placeholder="Write your title"
+                      placeholder="Untitled Masterpiece"
                       {...register("title", { required: true })}
                       ref={(e) => {
                         register("title").ref(e);
@@ -231,7 +231,7 @@ export default function NewPostEditor() {
                       );
                     }}
                     className="w-full bg-transparent text-lg leading-8 text-primary focus:outline-none resize-none py-6 rounded-md min-h-[320px] caret-green-600 transition-all"
-                    placeholder="Tell your story..."
+                    placeholder="The page is quiet. Let your thoughts speak."
                     style={{ minHeight: "320px" }}
                   />
 

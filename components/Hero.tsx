@@ -2,6 +2,7 @@
 
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
+import Link from "next/link";
 const text1 = "Insight without";
 const text2 = "the noise";
 const speed = 0.05;
@@ -61,7 +62,6 @@ export default function Hero() {
                   Daily curated wisdom
                 </span>
               </div>
-              {/* Intro component */}
               <div>
                 <motion.h1
                   variants={sentenceVariants}
@@ -103,13 +103,19 @@ export default function Hero() {
               </div>
               {/* forth component */}
               <div className="flex flex-col sm:flex-row gap-4  sm:max-w-xl mt-4">
-                <button className="rounded-full px-4 py-2 bg-white text-[#1c2e22] text-lg font-sans font-bold hover:bg-gray-100 transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                <Link
+                  href="/SignUp"
+                  className="rounded-full px-4 py-2 bg-white text-[#1c2e22] text-lg font-bold hover:bg-gray-200 transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                >
                   Start Reading Free
                   <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <button className="rounded-full px-4 py-2 bg-transparent border border-white/20 text-white text-lg font-sans font-medium hover:bg-white/5 transition-all flex items-center justify-center">
+                </Link>
+                <Link
+                  href="#methodology"
+                  className="rounded-full px-4 py-2 bg-transparent border border-white/20 text-white text-lg font-sans font-medium hover:bg-white/5 transition-all flex items-center justify-center"
+                >
                   Explore Methodology
-                </button>
+                </Link>
               </div>
             </div>
           </div>

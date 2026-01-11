@@ -70,7 +70,7 @@ export default function HandleDeletes({
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.98 }}
-          className="rounded-full cursor-pointer p-2 hover:bg-main-dark transition-colors"
+          className="rounded-full cursor-pointer p-2 text-inherit hover:bg-[#17cf54]/20 hover:text-[#17cf54] transition-colors duration-200"
           onClick={() => setShowModal(true)}
         >
           <Trash2 size={20} />

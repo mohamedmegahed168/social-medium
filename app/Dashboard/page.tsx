@@ -5,6 +5,7 @@ import DashboardNav from "@/components/DashboardNav";
 import HandleLikes from "@/components/HandleLikes";
 import HandleDeletes from "@/components/HandleDeletes";
 import HandleEdit from "@/components/HandleEdit";
+import ExpandableContent from "@/components/ExpandedContent";
 import { TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
@@ -316,18 +317,14 @@ export default function BlogDashboard() {
                       )}
                     </div>
 
-                    {/* Title */}
-                    <h2 className="text-2xl font-bold leading-tight tracking-tight group-hover:text-[#2d5e40] transition-colors text-[#222222] ">
+                    <h2 className="text-xl sm:text-2xl font-bold leading-tight tracking-tight group-hover:text-[#2d5e40] transition-colors text-[#222222] ">
                       {article.title}
                     </h2>
 
-                    {/* Description */}
-                    <p className="text-[#6b6b6b] text-base line-clamp-2 leading-relaxed">
-                      {article.content}
-                    </p>
+                    <ExpandableContent content={article.content} />
 
                     {/* Footer */}
-                    <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center justify-between ">
                       <div className="flex items-center gap-3">
                         <div className="text-xs text-[#6b6b6b] flex gap-2">
                           {article.topics &&
