@@ -61,7 +61,6 @@ export default function SignUp() {
       fireBaseErrors(error);
     } finally {
       setLoading(false);
-      setSuccessful(false);
     }
   }
   function fireBaseErrors(error: unknown) {
@@ -258,14 +257,14 @@ export default function SignUp() {
                   {loading ? (
                     <>
                       <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Signing you in...
+                      Setting up an account for you...
                     </>
                   ) : successful ? (
                     <span className="flex items-center justify-center">
-                      Signed in successfually <Check />
+                      Signed up successfually <Check />
                     </span>
                   ) : (
-                    "Sign In"
+                    "Sign up"
                   )}
                 </button>
               </form>

@@ -360,7 +360,7 @@ export default function UserProfile() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white/5 py-5 sm:py-8 pb-5 border-t border-white/5 mt-32">
+      <footer className="bg-white/5 py-5 sm:py-8 pb-5 border-t border-white/5 ">
         <div className="max-w-[1440px] mx-auto px-10">
           <div className="flex flex-col sm:flex-row items-center justify-center text-center sm:justify-between gap-5 sm:gap-12">
             <Link href="/">
