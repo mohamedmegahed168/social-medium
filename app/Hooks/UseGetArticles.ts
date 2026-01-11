@@ -34,6 +34,7 @@ export function useGetArticles(
     let unsubscribe: (() => void) | undefined;
 
     const subscribeToArticles = () => {
+      setArticles([]);
       setLoading(true);
 
       if (selectedTab === "My Articles" && !userId) {
