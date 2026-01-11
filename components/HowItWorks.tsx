@@ -52,20 +52,19 @@ export default function LandingPage() {
   };
 
   const gridItemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.8 },
+    hidden: { opacity: 0, scale: 0.95 },
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15 },
+      transition: { duration: 0.4, ease: "easeOut" },
     },
   };
 
   const cardInternalTextVariants: Variants = {
-    hidden: { opacity: 0, x: -20 },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      x: 0,
-      transition: { duration: 0.6, ease: "easeOut", delay: 0.3 },
+      transition: { duration: 0.4, ease: "easeOut" },
     },
   };
   return (
@@ -78,21 +77,8 @@ export default function LandingPage() {
         <section className="relative overflow-hidden bg-[#f6f8f6] py-20 px-4 md:px-10">
           {/* Background Blurs */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
-            <motion.div
-              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] rounded-full bg-[#17cf54] blur-[100px]"
-            />
-            <motion.div
-              animate={{ scale: [1, 1.1, 1], x: [0, 20, 0] }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1,
-              }}
-              className="absolute top-[40%] -left-[10%] w-[400px] h-[400px] rounded-full bg-[#17cf54] blur-[120px]"
-            />
+            <div className="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] rounded-full bg-[#17cf54] blur-[100px]" />
+            <div className="absolute top-[40%] -left-[10%] w-[400px] h-[400px] rounded-full bg-[#17cf54] blur-[120px]" />
           </div>
 
           <div className="mx-auto flex flex-col max-w-[960px] gap-10">
