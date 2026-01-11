@@ -5,6 +5,7 @@ import HowItWorks from "@/components/HowItWorks";
 import GettingStarted from "@/components/GettingStarted";
 import CallToAction from "@/components/HeroCta";
 import HeroFooter from "@/components/HeroFooter";
+import AboutPage from "@/components/About";
 export default function Home() {
   return (
     <div>
@@ -14,6 +15,7 @@ export default function Home() {
       <HowItWorks />
       <GettingStarted />
       <CallToAction />
+      <AboutPage />
       <HeroFooter />
     </div>
   );

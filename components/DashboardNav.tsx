@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Search, SquarePen, BookOpen } from "lucide-react";
+import { motion } from "motion/react";
 interface userData {
   userName: string;
   userId: string;
@@ -9,17 +10,41 @@ export default function DashboardNav({ userName, userId }: userData) {
     <nav className=" sticky top-0 z-50 w-full w-full bg-[#fdfbf7]/95 backdrop-blur-md border-b border-[#e0e0e0]">
       <div className=" px-4 md:px-0 h-16 mx-auto max-w-7xl flex  items-center justify-between ">
         <div className="flex items-center gap-6">
-          <Link
-            href="/"
-            className="flex items-center gap-3 text-primary group hover:opacity-80 transition-opacity"
-          >
-            <div className="gap-2 text-[#2d5e40] flex items-center justify-center">
-              <BookOpen size={30} />
+          <Link href="/">
+            <motion.div
+              className="flex items-center gap-3 text-primary cursor-pointer"
+              initial="rest"
+              whileHover="hover"
+              animate="rest"
+            >
+              <motion.div
+                variants={{
+                  rest: { rotate: 0, scale: 1 },
+                  hover: {
+                    rotate: -12,
+                    scale: 1.1,
+                    transition: { type: "spring", stiffness: 300, damping: 10 },
+                  },
+                }}
+                className="text-[#2d5e40] flex items-center justify-center"
+              >
+                <BookOpen size={30} />
+              </motion.div>
 
-              <span className="text-2xl font-bold tracking-tight text-[#222222]">
+              <motion.span
+                className="text-2xl font-bold tracking-tight text-primary"
+                variants={{
+                  rest: { scale: 1, color: "inherit" },
+                  hover: {
+                    scale: 1.02,
+                    color: "#17cf54",
+                    transition: { duration: 0.2 },
+                  },
+                }}
+              >
                 Social Medium
-              </span>
-            </div>
+              </motion.span>
+            </motion.div>
           </Link>
 
           {/* Search */}

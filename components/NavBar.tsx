@@ -24,7 +24,6 @@ function NavBar() {
   }, []);
 
   useEffect(() => {
-    // Lock body scroll when mobile menu is open
     if (typeof document !== "undefined") {
       document.body.style.overflow = isOpen ? "hidden" : "";
     }
@@ -93,7 +92,7 @@ function NavBar() {
           <div className="flex gap-3">
             <Link
               href="/SignUp"
-              className="flex items-center justify-center rounded-full h-9 px-5 bg-[#17cf54] hover:bg-green-600 text-white text-sm font-bold font-sans tracking-wide transition-colors"
+              className="flex items-center justify-center rounded-full h-9 px-5 bg-main-light hover:bg-main-dark hover:border hover:border-main-light text-white text-sm font-bold  tracking-wide transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Sign up

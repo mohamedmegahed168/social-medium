@@ -149,7 +149,6 @@ export default function BlogDashboard() {
       <DashboardNav userName={userData.userName} userId={user.uid} />
       {/* Main Content */}
       <div className="flex flex-1 justify-center w-full max-w-7xl mx-auto">
-        {/* Feed */}
         <motion.main
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
@@ -250,7 +249,6 @@ export default function BlogDashboard() {
             animate="visible"
             className="flex flex-col gap-6 relative"
           >
-            {/* Inline fallback skeleton while fetching (if overlay is disabled) */}
             {articlesLoading && !showLoader && (
               <div className="py-6 flex flex-col gap-4">
                 {[1, 2, 3].map((i) => (

@@ -99,7 +99,7 @@ export default function SignIn() {
           </p>
           <Link
             href="/SignUp"
-            className="text-sm border border-greenish text-greenish rounded-2xl px-3 py-2"
+            className="text-sm border border-main-light text-white bg-main-light hover:bg-main-dark hover:border-main-dark rounded-2xl px-3 py-2"
           >
             Sign up
           </Link>
@@ -153,8 +153,9 @@ export default function SignIn() {
                   },
                 })}
                 id="email"
+                type="email"
                 placeholder="username@example.com"
-                className="bg-white outline-none border border-[#dce5df] px-3 py-2 font-light rounded-xl"
+                className="font-light rounded-xl bg-white outline-none border border-[#dce5df] px-4 py-2 focus:border-main-light"
               />
               {errors.email && (
                 <p className="text-red-700"> {errors.email.message} </p>
@@ -169,13 +170,13 @@ export default function SignIn() {
                   required: "password is required",
                   minLength: {
                     value: 6,
-                    message: "password is required",
+                    message: "password must be at least 6 characters",
                   },
                 })}
                 id="password"
                 type="password"
                 placeholder="At least 6 characters"
-                className="outline-none bg-white px-3 py-2 border border-[#dce5df] rounded-xl font-light"
+                className="font-light rounded-xl bg-white outline-none border border-[#dce5df] px-4 py-2 focus:border-main-light"
               />
               {errors.password && (
                 <p className="text-red-700"> {errors.password.message} </p>
@@ -194,7 +195,7 @@ export default function SignIn() {
                 id="confirmPassword"
                 type="password"
                 placeholder="Confirm your password"
-                className="outline-none bg-white px-3 py-2 border border-[#dce5df] rounded-xl font-light"
+                className="font-light rounded-xl bg-white outline-none border border-[#dce5df] px-4 py-2 focus:border-main-light"
               />
               {errors.confirmPassword && (
                 <p className="text-red-700">

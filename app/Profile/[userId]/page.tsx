@@ -29,28 +29,58 @@ export default function UserProfile() {
     }
   }, [currentUser, authLoading, router, userData]);
 
-  // Note: article loading is handled inline with skeletons instead of a full-page return so the header and profile stay visible while fetching.
   return (
-    <div className="bg-[#0f1110] text-[#e2e8f0] min-h-screen font-serif">
+    <div className="bg-[#0f1110] text-[#e2e8f0] min-h-screen flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-[#0f1110]/90 backdrop-blur-md border-b border-white/5">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between px-10 py-5">
           {/* Left */}
           <div className="flex items-center gap-4 sm:gap-12">
-            <Link href="/" className="flex items-center gap-3">
-              <div className=" text-main-light flex items-center justify-center gap-3">
-                <BookOpen />
+            <Link href="/">
+              <motion.div
+                className="flex items-center gap-3 text-white cursor-pointer"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+              >
+                <motion.div
+                  variants={{
+                    rest: { rotate: 0, scale: 1 },
+                    hover: {
+                      rotate: -12,
+                      scale: 1.1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 10,
+                      },
+                    },
+                  }}
+                  className="text-white flex items-center justify-center"
+                >
+                  <BookOpen size={30} />
+                </motion.div>
 
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
-                  Social Medium{" "}
-                </h2>
-              </div>
+                <motion.span
+                  className="text-2xl font-bold tracking-tight text-primary"
+                  variants={{
+                    rest: { scale: 1, color: "inherit" },
+                    hover: {
+                      scale: 1.02,
+                      color: "#116b2f",
+                      transition: { duration: 0.2 },
+                    },
+                  }}
+                >
+                  Social Medium
+                </motion.span>
+              </motion.div>
             </Link>
 
             <div className="hidden sm:block">
               <Link
                 href="/Dashboard"
-                className="text-sm font-medium hover:text-[#4ade80] transition-colors text-white/70"
+                className="text-lg font-medium hover:text-[#4ade80] transition-colors text-white/70"
               >
                 Dashboard
               </Link>
@@ -58,7 +88,7 @@ export default function UserProfile() {
             <div className="hidden sm:block">
               <Link
                 href="/Write"
-                className="text-sm font-medium hover:text-[#4ade80] transition-colors text-white/70"
+                className="text-lg font-medium hover:text-[#4ade80] transition-colors text-white/70"
               >
                 Write
               </Link>
@@ -66,8 +96,8 @@ export default function UserProfile() {
           </div>
 
           {/* Right */}
-          <div className="flex items-center gap-8">
-            <div className="hidden sm:flex items-center bg-white/5 rounded-full px-5 h-10 w-80 lg:w-[400px] border border-white/10 focus-within:border-[#4ade80]/40 transition-all">
+          <div className="flex items-center justify-between gap-0 sm:gap-8">
+            <div className="hidden sm:flex items-center bg-white/5 rounded-full px-0 h-0 w-0 sm:px-5 sm:h-10 sm:w-80  border border-white/10 focus-within:border-[#4ade80]/40 transition-all">
               <Search className="size-5 text-white/40" />
               <input
                 className="bg-transparent border-none focus:ring-0 focus:outline-none text-sm w-full placeholder:text-white/40 ml-2"
@@ -78,13 +108,13 @@ export default function UserProfile() {
             <div className="block sm:hidden">
               <Link
                 href="/Dashboard"
-                className="text-sm font-medium hover:text-[#4ade80] transition-colors text-white/70"
+                className="text-md font-medium transition-colors text-white/95 hover:text-white/50"
               >
                 Dashboard
               </Link>
             </div>
             <Link href={`/Profile/${currentUser?.uid}`}>
-              <div className="text-white border-2 border-[#4ade80]/50 text-2xl font-bold  flex items-center justify-center size-10 rounded-full bg-cover bg-center border border-white/10 cursor-pointer">
+              <div className="hidden sm:flex text-white  text-2xl font-bold  items-center justify-center size-10 rounded-full bg-cover bg-center border-2 border-white/50 cursor-pointer hover:bg-white/60 hover:text-main-dark">
                 {userData && userData.userName.charAt(0).toUpperCase()}
               </div>
             </Link>
@@ -144,13 +174,13 @@ export default function UserProfile() {
           </motion.div>
         )}
       </AnimatePresence>
-      <main className="max-w-[1440px] mx-auto px-10 pt-16 pb-32">
+      <main className="max-w-[1440px] mx-auto flex-1 w-full px-10 pt-5 sm:pt-10 relative">
         <div className="flex flex-col lg:flex-row gap-20">
           {/* Articles Section */}
           <div className="flex-1 order-2 lg:order-1 max-w-[900px]">
             <div className="mb-4">
               {profile && (
-                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight mb-3">
+                <h1 className="text-2xl sm:text-4xl font-bold tracking-tight mb-3">
                   {profile.userName}
                 </h1>
               )}
@@ -277,14 +307,6 @@ export default function UserProfile() {
                   ))
                 )}
               </div>
-
-              {/* Show More Button */}
-              <div className="pt-4 flex justify-start">
-                <button className="text-lg font-bold text-[#4ade80] hover:brightness-125 transition-all flex items-center gap-3 group">
-                  Show more articles
-                  <ChevronDown className="size-6 transition-transform group-hover:translate-y-1" />
-                </button>
-              </div>
             </div>
           </div>
 
@@ -330,22 +352,51 @@ export default function UserProfile() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white/5 py-20 border-t border-white/5">
+      <footer className="bg-white/5 py-5 sm:py-8 pb-5 border-t border-white/5 mt-32">
         <div className="max-w-[1440px] mx-auto px-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
-              <div className=" text-main-light flex items-center justify-center gap-3">
-                <BookOpen />
+          <div className="flex flex-col sm:flex-row items-center justify-center text-center sm:justify-between gap-5 sm:gap-12">
+            <Link href="/">
+              <motion.div
+                className="flex items-center gap-3 text-white cursor-pointer"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+              >
+                <motion.div
+                  variants={{
+                    rest: { rotate: 0, scale: 1 },
+                    hover: {
+                      rotate: -12,
+                      scale: 1.1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 10,
+                      },
+                    },
+                  }}
+                  className="text-white flex items-center justify-center"
+                >
+                  <BookOpen size={30} />
+                </motion.div>
 
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
-                  Social Medium{" "}
-                </h2>
-              </div>
+                <motion.span
+                  className="text-2xl font-bold tracking-tight text-primary"
+                  variants={{
+                    rest: { scale: 1, color: "inherit" },
+                    hover: {
+                      scale: 1.02,
+                      color: "#116b2f",
+                      transition: { duration: 0.2 },
+                    },
+                  }}
+                >
+                  Social Medium
+                </motion.span>
+              </motion.div>
             </Link>
 
-            {/* Links */}
-            <div className="flex flex-wrap justify-center gap-10 text-sm font-medium text-white/50">
+            <div className="flex flex-wrap justify-center gap-10 text-sm  text-white/50">
               {footerLinks.map((link) => (
                 <Link
                   key={link}
@@ -357,9 +408,8 @@ export default function UserProfile() {
               ))}
             </div>
 
-            {/* Copyright */}
-            <p className="text-sm text-white/30 font-medium">
-              © 2023 BlogSpace Inc. Designed for reading.
+            <p className="text-sm text-white/30 ">
+              © 2025 Social Medium by Mohamed Megahed Designed for reading.
             </p>
           </div>
         </div>

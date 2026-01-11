@@ -103,12 +103,15 @@ export default function SignUp() {
             Social Medium
           </Link>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex sm:gap-2">
+          <p className="hidden sm:block text-md px-3 py-2 text-secondary ">
+            Already have an account?
+          </p>
           <Link
             href="/SignIn"
-            className="text-sm sm:text-base font-medium text-[var(--color-secondary)] hover:text-[var(--color-primary)]"
+            className="text-sm border border-main-light text-white bg-main-light hover:bg-main-dark hover:border-main-dark rounded-2xl px-3 py-2"
           >
-            Sign In
+            Sign in
           </Link>
         </div>
       </header>
@@ -170,17 +173,14 @@ export default function SignUp() {
                     autoComplete="email"
                     placeholder="name@example.com"
                     id="email"
-                    className="resize-none bg-white overflow-hidden text-base font-light outline-none border border-[#dce5df] rounded-xl px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
+                    className="resize-none bg-white overflow-hidden text-base font-light outline-none border border-[#dce5df] rounded-xl px-4 py-2 focus:border-main-light"
                   />
                   {errors.email && (
                     <p className="text-red-700">{errors.email.message}</p>
                   )}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="userName"
-                    className="text-[var(--color-secondary)]"
-                  >
+                  <label htmlFor="userName" className="text-secondary">
                     Username
                   </label>
                   <input
@@ -194,17 +194,14 @@ export default function SignUp() {
                     type="text"
                     placeholder="your username"
                     id="userName"
-                    className="outline-none bg-white font-light border border-[#dce5df] rounded-xl px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
+                    className="outline-none bg-white font-light border border-[#dce5df] rounded-xl px-4 py-2 focus:border-main-light"
                   />
                   {errors.userName && (
                     <p className="text-red-700"> {errors.userName.message} </p>
                   )}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="password"
-                    className="text-[var(--color-secondary)]"
-                  >
+                  <label htmlFor="password" className="text-secondary">
                     Password
                   </label>
                   <input
@@ -218,17 +215,14 @@ export default function SignUp() {
                     type="password"
                     placeholder="at least 6characters"
                     id="password"
-                    className="font-light rounded-xl bg-white outline-none border border-[#dce5df] px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
+                    className="font-light rounded-xl bg-white outline-none border border-[#dce5df] px-4 py-2 focus:border-main-light"
                   />
                   {errors.password && (
                     <p className="text-red-700"> {errors.password.message} </p>
                   )}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="text-[var(--color-secondary)]"
-                  >
+                  <label htmlFor="confirmPassword" className="text-secondary">
                     confirm your password
                   </label>
                   <input
@@ -240,7 +234,7 @@ export default function SignUp() {
                     type="password"
                     placeholder="confirm your password"
                     id="confirmPassword"
-                    className="font-light rounded-xl bg-white outline-none border border-[#dce5df] px-4 py-2 focus:border-[var(--color-greenish)] focus:ring-1 focus:ring-[var(--color-greenish)] focus:ring-opacity-20"
+                    className="font-light rounded-xl bg-white outline-none border border-[#dce5df] px-4 py-2 focus:border-main-light"
                   />
                   {errors.confirmPassword && (
                     <p className="text-red-700">
