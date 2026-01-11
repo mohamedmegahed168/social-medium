@@ -1,16 +1,29 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-interface contentData {
+
+interface ContentData {
   content: string;
 }
-function ExpandableContent({ content }: contentData) {
+
+function ExpandableContent({ content }: ContentData) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [needsExpand, setNeedsExpand] = useState(false);
+  const contentRef = useRef<HTMLParagraphElement>(null);
 
-  const isLongContent = content.length > 140;
+  useEffect(() => {
+    function checkOverflow() {
+      const element = contentRef.current;
+      if (element) {
+        const isOverflowing = element.scrollHeight > element.clientHeight;
+        setNeedsExpand(isOverflowing);
+      }
+    }
 
-  if (!isLongContent) {
-    return <p className="text-[#6b6b6b] text-md leading-relaxed">{content}</p>;
-  }
+    checkOverflow();
+
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [content]);
 
   return (
     <div className="flex flex-col items-start">
@@ -20,6 +33,7 @@ function ExpandableContent({ content }: contentData) {
         className="relative"
       >
         <p
+          ref={contentRef}
           className={`text-[#6b6b6b] text-md leading-relaxed transition-all duration-300 ${
             isExpanded ? "" : "line-clamp-2"
           }`}
@@ -28,12 +42,14 @@ function ExpandableContent({ content }: contentData) {
         </p>
       </motion.div>
 
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="mt-1 text-sm font-bold text-[#17cf54] hover:text-[#12a543] hover:underline decoration-2 underline-offset-4 transition-all cursor-pointer flex items-center gap-1 outline-none"
-      >
-        {isExpanded ? <>Show Less</> : <>Read more...</>}
-      </button>
+      {(needsExpand || isExpanded) && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="mt-1 text-sm font-bold text-[#17cf54] hover:text-[#12a543] hover:underline decoration-2 underline-offset-4 transition-all cursor-pointer flex items-center gap-1 outline-none"
+        >
+          {isExpanded ? "Show Less" : "Read more..."}
+        </button>
+      )}
     </div>
   );
 }

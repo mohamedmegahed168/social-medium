@@ -127,13 +127,13 @@ export default function HandleDeletes({
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 bg-red-600 cursor-pointer text-white rounded-lg hover:bg-red-700 font-medium text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={deleteHandler}
                     disabled={loading || isProcessing}
                   >
                     {loading || isProcessing ? (
                       <>
-                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span className="w-4 cursor-auto h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         Deleting...
                       </>
                     ) : (
