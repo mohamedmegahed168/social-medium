@@ -11,7 +11,7 @@ function NavBar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -28,47 +28,48 @@ function NavBar() {
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none">
       <motion.header
         layout
-        initial={{
-          y: 0,
-          width: "100%",
-          borderRadius: 0,
-          backgroundColor: "rgba(0,0,0,0)",
+        initial="top"
+        animate={scrolled ? "scrolled" : "top"}
+        variants={{
+          top: {
+            y: 0,
+            width: "100%",
+            maxWidth: "100%",
+            borderRadius: "0px",
+            // Solid dark green (Darker than #1c2e22)
+            backgroundColor: "#152219",
+            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            borderLeft: "0px solid rgba(255,255,255,0)",
+            borderRight: "0px solid rgba(255,255,255,0)",
+            borderTop: "0px solid rgba(255,255,255,0)",
+            padding: "1rem 1.5rem",
+            boxShadow: "none",
+          },
+          scrolled: {
+            y: 12,
+            width: "92%",
+            maxWidth: "1100px",
+            borderRadius: "50px",
+            // Same deep green but with opacity for glass effect
+            backgroundColor: "rgba(21, 34, 25, 0.85)",
+            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            borderLeft: "1px solid rgba(255,255,255,0.1)",
+            borderRight: "1px solid rgba(255,255,255,0.1)",
+            borderTop: "1px solid rgba(255,255,255,0.1)",
+            padding: "0.75rem 1.5rem",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+          },
         }}
-        animate={
-          scrolled
-            ? {
-                y: 12, // Move down slightly
-                width: "92%", // Shrink width
-                maxWidth: "1100px", // Cap max width
-                borderRadius: "9999px", // Fully rounded
-                backgroundColor: "rgba(15, 17, 16, 0.85)", // Dark background
-                border: "1px solid rgba(255,255,255,0.1)",
-                padding: "0.75rem 1.5rem",
-              }
-            : {
-                y: 0,
-                width: "100%",
-                maxWidth: "100%",
-                borderRadius: "0px",
-                backgroundColor: "rgba(28, 46, 34, 0.95)", // Start semi-transparent dark (better visibility) or keep 0 if prefer
-                border: "1px solid rgba(255,255,255,0)",
-                padding: "1rem 1.5rem",
-              }
-        }
         transition={{
-          duration: 0.4,
-          type: "spring",
-          stiffness: 100,
-          damping: 20,
+          duration: 0.3,
+          ease: "easeInOut",
         }}
-        className="pointer-events-auto backdrop-blur-md shadow-lg"
+        // Added relative and z-50 to ensure header sits ABOVE the backdrop
+        className="pointer-events-auto backdrop-blur-md relative z-50"
       >
         <div className="flex items-center justify-between w-full mx-auto max-w-7xl">
           <Link href="/" className="shrink-0">
-            <motion.div
-              layout
-              className="flex items-center gap-3 text-white cursor-pointer"
-            >
+            <div className="flex items-center gap-3 text-white cursor-pointer">
               <motion.div
                 whileHover={{ rotate: -12, scale: 1.1 }}
                 className="flex items-center justify-center text-white"
@@ -79,7 +80,7 @@ function NavBar() {
               <h2 className="text-xl md:text-2xl font-bold tracking-tight whitespace-nowrap">
                 Social Medium
               </h2>
-            </motion.div>
+            </div>
           </Link>
 
           {/* DESKTOP NAV */}
@@ -130,48 +131,62 @@ function NavBar() {
       {/* MOBILE MENU */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            className="absolute top-24 left-4 right-4 z-40 bg-[#0f1110]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl md:hidden pointer-events-auto"
-          >
-            <div className="flex flex-col gap-2">
-              {[
-                { name: "Getting started", href: "#gettingStarted" },
-                { name: "Methodology", href: "#methodology" },
-                { name: "Explore", href: "#explore" },
-                { name: "Our story", href: "#ourStory" },
-                { name: "Write", href: "/Write" },
-              ].map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="p-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all font-medium"
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <div className="h-px bg-white/10 my-2" />
-              <div className="grid grid-cols-2 gap-3">
-                <Link
-                  href="/SignIn"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center h-10 rounded-lg border border-white/10 text-white font-bold hover:bg-white/5 transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/SignUp"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center h-10 rounded-lg bg-[#17cf54] text-white font-bold hover:bg-green-600 transition-colors"
-                >
-                  Get Started
-                </Link>
+          <>
+            {/* BACKDROP */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden pointer-events-auto"
+            />
+
+            {/* MENU CONTAINER */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+              transition={{ duration: 0.2 }}
+              // Updated background to match deep green theme
+              className="absolute top-24 left-4 right-4 z-40 bg-[#152219] border border-white/10 rounded-2xl p-4 shadow-2xl md:hidden pointer-events-auto"
+            >
+              <div className="flex flex-col gap-2">
+                {[
+                  { name: "Getting started", href: "#gettingStarted" },
+                  { name: "Methodology", href: "#methodology" },
+                  { name: "Explore", href: "#explore" },
+                  { name: "Our story", href: "#ourStory" },
+                  { name: "Write", href: "/Write" },
+                ].map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="p-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all font-medium"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+                <div className="h-px bg-white/10 my-2" />
+                <div className="grid grid-cols-2 gap-3">
+                  <Link
+                    href="/SignIn"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center justify-center h-10 rounded-lg border border-white/10 text-white font-bold hover:bg-white/5 transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/SignUp"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center justify-center h-10 rounded-lg bg-[#17cf54] text-white font-bold hover:bg-green-600 transition-colors"
+                  >
+                    Get Started
+                  </Link>
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>
