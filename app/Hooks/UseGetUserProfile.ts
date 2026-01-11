@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore"; // Change getDoc to onSnapshot
 import { usersReference } from "@/lib/firebase";
 export interface UserProfile {
   uid: string;
   userName: string;
   photoURL?: string;
   bio?: string;
-  joinedAt?: number;
+  role?: string;
 }
 
 export function useGetUserProfile(userId: string) {
@@ -14,26 +14,28 @@ export function useGetUserProfile(userId: string) {
   const [loadingProfile, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!userId) return;
-
-    async function fetchUser() {
-      setLoading(true);
-      try {
-        const docReference = doc(usersReference, userId);
-        const userDoc = await getDoc(docReference);
-        if (userDoc.exists()) {
-          setProfile(userDoc.data() as UserProfile);
+    if (!userId) {
+      return;
+    }
+    const docReference = doc(usersReference, userId);
+    const unsubscribe = onSnapshot(
+      docReference,
+      (docSnap) => {
+        setLoading(true);
+        if (docSnap.exists()) {
+          setProfile(docSnap.data() as UserProfile);
         } else {
           setProfile(null);
         }
-      } catch (error) {
+        setLoading(false);
+      },
+      (error) => {
         console.error("Error fetching user profile:", error);
-      } finally {
         setLoading(false);
       }
-    }
+    );
 
-    fetchUser();
+    return () => unsubscribe();
   }, [userId]);
 
   return { profile, loadingProfile };

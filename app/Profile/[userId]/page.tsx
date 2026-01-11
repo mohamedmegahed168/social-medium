@@ -10,7 +10,8 @@ import HandleLikes from "@/components/HandleLikes";
 import HandleDeletes from "@/components/HandleDeletes";
 import HandleEdit from "@/components/HandleEdit";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Clock, ChevronDown, BookOpen } from "lucide-react";
+import { Search, Clock, BookOpen } from "lucide-react";
+import HandleBioUpdate from "@/components/HandleBioUpdate";
 
 const footerLinks = ["About", "Help", "Terms", "Privacy", "Careers"];
 
@@ -28,7 +29,7 @@ export default function UserProfile() {
       router.push("/SignIn");
     }
   }, [currentUser, authLoading, router, userData]);
-
+  if (!profile) return null;
   return (
     <div className="bg-[#0f1110] text-[#e2e8f0] min-h-screen flex flex-col">
       {/* Header */}
@@ -195,8 +196,7 @@ export default function UserProfile() {
 
                   <div className="flex-1">
                     <p className="text-sm text-white/60 mt-1 line-clamp-2">
-                      {profile?.bio ||
-                        "No bio yet. This user hasn't added a bio."}
+                      {profile?.bio || "No bio yet."}
                     </p>
 
                     <div className="mt-3 flex items-center gap-4 text-sm text-white/60">
@@ -241,7 +241,7 @@ export default function UserProfile() {
                       className="group bg-white/2 p-6 rounded-xl"
                     >
                       <div className="flex flex-col gap-4">
-                        <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#4ade80]">
+                        <div className="flex items-center gap-3 text-sm font-bold text-main-light/60 uppercase tracking-[0.2em]">
                           <span>{article.topics?.join(", ")}</span>
                           <span className="text-white/20">•</span>
                           <span className="text-white/50">
@@ -337,6 +337,14 @@ export default function UserProfile() {
                     {profile?.bio ||
                       "No bio yet. This user hasn't added a bio."}
                   </p>
+                  {isOwnProfile && (
+                    <div className="flex w-full justify-end mt-5">
+                      <HandleBioUpdate
+                        profileId={profileId}
+                        currentBio={profile.bio || ""}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
