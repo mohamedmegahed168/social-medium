@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useSignInWithGoogle } from "../Hooks/UseSignInWithGoogle";
 import { FirebaseError } from "firebase/app";
 import { useState } from "react";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Check } from "lucide-react";
 export default function SignUp() {
   interface SignUp {
     email: string;
@@ -29,6 +29,7 @@ export default function SignUp() {
   const router = useRouter();
   const [generalErrors, setGeneralErrors] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [successful, setSuccessful] = useState<boolean>(false);
   const { loginInWithGoogle, error } = useSignInWithGoogle();
 
   async function HandleGoogleValidation() {
@@ -52,12 +53,15 @@ export default function SignUp() {
         userName: userName,
         email: email,
       });
+      setSuccessful(true);
+      await new Promise((resolve) => setTimeout(resolve, 800));
       router.push("/Dashboard");
     } catch (error) {
       setLoading(false);
       fireBaseErrors(error);
     } finally {
       setLoading(false);
+      setSuccessful(false);
     }
   }
   function fireBaseErrors(error: unknown) {
@@ -243,19 +247,25 @@ export default function SignUp() {
                   )}
                 </div>
                 <button
-                  type="submit"
                   disabled={loading}
-                  className={` flex items-center justify-center cursor-pointer  px-4 py-2  text-white rounded-2xl transition-colors ${
-                    loading ? "bg-main-dark" : "bg-main-light"
-                  } hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[var(--color-greenish)] focus:ring-opacity-30`}
+                  className={`flex items-center justify-center  text-white px-3 py-2 rounded-2xl ${
+                    loading
+                      ? "bg-[#1c2e22]"
+                      : "bg-main-light cursor-pointer hover:bg-[#1c2e22] transition-colors"
+                  }`}
+                  type="submit"
                 >
                   {loading ? (
                     <>
                       <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Setting up your account...
+                      Signing you in...
                     </>
+                  ) : successful ? (
+                    <span className="flex items-center justify-center">
+                      Signed in successfually <Check />
+                    </span>
                   ) : (
-                    "Create account"
+                    "Sign In"
                   )}
                 </button>
               </form>

@@ -48,6 +48,7 @@ export default function SignIn() {
       setLoading(false);
     } finally {
       setLoading(false);
+      setSuccessful(false);
     }
   }
 
@@ -209,7 +210,7 @@ export default function SignIn() {
                 disabled={loading}
                 className={`flex items-center justify-center  text-white px-3 py-2 rounded-2xl ${
                   loading
-                    ? "bg-[#1c2e22] cursor-not-allowed"
+                    ? "bg-[#1c2e22]"
                     : "bg-main-light cursor-pointer hover:bg-[#1c2e22] transition-colors"
                 }`}
                 type="submit"

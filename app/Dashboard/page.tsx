@@ -78,7 +78,7 @@ export default function BlogDashboard() {
 
   useEffect(() => {
     if (!user && !loading) {
-      router.push("/SignIn");
+      router.push("/");
     }
   }, [user, loading, router]);
 
@@ -187,7 +187,6 @@ export default function BlogDashboard() {
             </div>
           </div>
 
-          {/* Loader overlay when show loader is true for the initial render */}
           <AnimatePresence>
             {showLoader && (
               <motion.div

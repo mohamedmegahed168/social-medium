@@ -11,7 +11,7 @@ export const UseLogOut = () => {
     setLoading(true);
     try {
       await signOut(auth);
-      router.replace("/SignIn");
+      router.push("/");
     } catch (error) {
       console.error("Error signing out:", error);
     } finally {
