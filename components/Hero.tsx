@@ -1,11 +1,53 @@
 "use client";
 
 import { ArrowRight, Sparkles } from "lucide-react";
+import { motion } from "motion/react";
+const text1 = "Insight without";
+const text2 = "the noise";
+const speed = 0.05;
+const latency = 0.5;
+
+const startDelayForSecondLine = text1.length * speed + latency;
+const sentenceVariants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delay: 0.5,
+      staggerChildren: 0.08,
+    },
+  },
+};
+const secondSentenceVariants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: startDelayForSecondLine,
+      staggerChildren: speed,
+    },
+  },
+};
+const letterVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
 
 export default function Hero() {
   return (
-    <div className="relative bg-[#1c2e22] w-full text-white mt-16 overflow-x-hidden flex flex-col min-h-screen">
-      <main className="w-full px-6 sm:px-20  flex justify-center py-12  ">
+    <section
+      id="main"
+      className="relative bg-[#1c2e22] w-full text-white mt-16 overflow-x-hidden flex flex-col min-h-screen"
+    >
+      <motion.main
+        initial={{ opacity: 0, x: -14 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full px-6 sm:px-20  flex justify-center py-12  "
+      >
         <div className=" grid grid-cols-1 sm:grid-cols-2 gap-20 items-center">
           {/* first div included within the grid*/}
           <div>
@@ -21,19 +63,42 @@ export default function Hero() {
               </div>
               {/* Intro component */}
               <div>
-                <h1 className="text-5xl  sm:text-7xl font-bold tracking-tight leading-[1.1] text-white">
-                  Insight without
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#17cf54] to-green-300  pr-2">
-                    the noise.
-                  </span>
-                </h1>
+                <motion.h1
+                  variants={sentenceVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="text-5xl  sm:text-7xl font-bold tracking-tight leading-[1.1] text-white"
+                >
+                  {text1.split("").map((char, index) => (
+                    <motion.span key={index} variants={letterVariants}>
+                      {char}
+                    </motion.span>
+                  ))}
+
+                  <motion.span
+                    variants={secondSentenceVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="block text-transparent bg-clip-text bg-gradient-to-r from-[#17cf54] to-green-300  pr-2"
+                  >
+                    {text2.split("").map((char, index) => (
+                      <motion.span
+                        key={index}
+                        variants={letterVariants}
+                        className="inline-block"
+                      >
+                        {char === " " ? "\u00A0" : char}
+                      </motion.span>
+                    ))}
+                  </motion.span>
+                </motion.h1>
               </div>
               {/* third component*/}
               <div>
-                <p className="text-lg md:text-xl font-normal text-gray-400 leading-relaxed max-w-xl">
+                <p className="text-md md:text-xl font-normal text-gray-400 leading-relaxed max-w-xl">
                   Escape the algorithm. Chronicle is your sanctuary for deep
                   thinking, bringing you substantial stories on culture,
-                  innovation, and the future—free from distraction.
+                  innovation, and the future, free from distraction.
                 </p>
               </div>
               {/* forth component */}
@@ -42,7 +107,7 @@ export default function Hero() {
                   Start Reading Free
                   <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
                 </button>
-                <button className="rounded-full px-4 py-3 bg-transparent border border-white/20 text-white text-lg font-sans font-medium hover:bg-white/5 transition-all flex items-center justify-center">
+                <button className="rounded-full px-4 py-2 bg-transparent border border-white/20 text-white text-lg font-sans font-medium hover:bg-white/5 transition-all flex items-center justify-center">
                   Explore Methodology
                 </button>
               </div>
@@ -211,7 +276,7 @@ export default function Hero() {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </motion.main>
+    </section>
   );
 }

@@ -59,21 +59,21 @@ function NavBar() {
           <nav className="hidden md:flex items-center gap-6">
             <Link
               className="text-sm font-medium text-gray-300 hover:text-[#17cf54] transition-colors font-sans"
-              href="#"
-            >
-              Our Story
-            </Link>
-            <Link
-              className="text-sm font-medium text-gray-300 hover:text-[#17cf54] transition-colors font-sans"
               href="#gettingStarted"
             >
               Getting started
             </Link>
             <Link
               className="text-sm font-medium text-gray-300 hover:text-[#17cf54] transition-colors font-sans"
-              href="#discover"
+              href="#methodology"
             >
-              Discover
+              Methodology
+            </Link>
+            <Link
+              className="text-sm font-medium text-gray-300 hover:text-[#17cf54] transition-colors font-sans"
+              href="#explore"
+            >
+              Explore
             </Link>
             <Link
               href="/Dashboard"
@@ -123,28 +123,28 @@ function NavBar() {
           >
             <div className="px-4 py-4 flex flex-col gap-3">
               <Link
-                href="#"
+                href="#methodology"
                 onClick={() => setIsOpen(false)}
                 className="text-sm font-medium text-gray-300 hover:text-[#17cf54]"
               >
-                Our Story
+                Methodology
               </Link>
               <Link
-                href="#"
+                href="#explore"
                 onClick={() => setIsOpen(false)}
                 className="text-sm font-medium text-gray-300 hover:text-[#17cf54]"
               >
-                Membership
+                Explore
               </Link>
               <Link
-                href="#"
+                href="/Write"
                 onClick={() => setIsOpen(false)}
                 className="text-sm font-medium text-gray-300 hover:text-[#17cf54]"
               >
                 Write
               </Link>
               <Link
-                href="/signin"
+                href="/SignIn"
                 onClick={() => setIsOpen(false)}
                 className="text-sm font-medium text-gray-300 hover:text-[#17cf54]"
               >
@@ -153,7 +153,7 @@ function NavBar() {
 
               <div className="pt-3 border-t border-white/5 flex gap-3">
                 <Link
-                  href="/signup"
+                  href="/SignUp"
                   onClick={() => setIsOpen(false)}
                   className="flex-1 rounded-full h-9 px-5 bg-[#17cf54] hover:bg-green-600 text-white text-sm font-bold  tracking-wide transition-colors flex items-center justify-center"
                 >
