@@ -96,7 +96,7 @@ export default function Hero() {
               {/* third component*/}
               <div>
                 <p className="text-md md:text-xl font-normal text-gray-400 leading-relaxed max-w-xl">
-                  Escape the algorithm. Chronicle is your sanctuary for deep
+                  Escape the algorithm. Social Medium is your sanctuary for deep
                   thinking, bringing you substantial stories on culture,
                   innovation, and the future, free from distraction.
                 </p>
