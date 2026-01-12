@@ -34,7 +34,7 @@ export default function UserProfile() {
   return (
     <div className="bg-[#0f1110] text-[#e2e8f0] min-h-screen flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#0f1110]/90 backdrop-blur-md border-b border-white/5">
+      <header className="sticky top-0 z-50 bg-[#0f1110]/90 backdrop-blur-md border-b border-white/30">
         <div className="max-w-[1440px] mx-auto flex items-center justify-between px-8 py-2 sm:py-5">
           {/* Left */}
           <div className="flex items-center gap-4 sm:gap-12">
