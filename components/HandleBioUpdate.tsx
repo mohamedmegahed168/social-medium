@@ -8,11 +8,13 @@ import { motion, AnimatePresence } from "framer-motion";
 interface EditBioProps {
   profileId: string;
   currentBio: string;
+  size: number;
 }
 
 export default function HandleBioUpdate({
   profileId,
   currentBio,
+  size,
 }: EditBioProps) {
   const { user, userData } = useAuth();
   const { updateBio, updating } = useUpdateProfile();
@@ -41,7 +43,7 @@ export default function HandleBioUpdate({
         className="ml-2 p-1 text-gray-700 border border-gray-400 px-2 py-2 cursor-pointer hover:text-[#2d5e40] hover:bg-gray-50 transition-colors rounded-full bg-gray-300 "
         title="Edit Bio"
       >
-        <Pencil size={24} />
+        <Pencil size={size} />
       </button>
 
       <AnimatePresence>

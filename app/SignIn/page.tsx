@@ -120,7 +120,7 @@ export default function SignIn() {
           <div className="flex flex-col gap-3">
             <button
               onClick={HandleGoogleValidation}
-              className="bg-white cursor-pointer px-3 py-2 flex items-center justify-center rounded-2xl gap-2  "
+              className="bg-white hover:bg-gray-100 cursor-pointer px-3 py-2 flex items-center justify-center rounded-2xl gap-2  "
             >
               <GoogleIcon /> Sign in with google
             </button>

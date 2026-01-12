@@ -134,7 +134,7 @@ export default function SignUp() {
               <button
                 onClick={HandleGoogleValidation}
                 type="button"
-                className="w-full cursor-pointer bg-white border border-[#dce5df] px-4 py-2 rounded-2xl flex items-center justify-center gap-3 hover:shadow-sm transition-shadow"
+                className="w-full cursor-pointer bg-white border border-[#dce5df] px-4 py-2 rounded-2xl flex items-center justify-center gap-3 hover:shadow-sm hover:bg-gray-100 transition-shadow"
               >
                 <GoogleIcon />
                 <span className="text-sm sm:text-base">

@@ -116,7 +116,7 @@ export default function UserProfile() {
               </Link>
             </div>
             <Link href={`/Profile/${currentUser?.uid}`}>
-              <div className="hidden sm:flex text-white  text-2xl font-bold  items-center justify-center size-10 rounded-full bg-cover bg-center border-2 border-white/50 cursor-pointer hover:bg-white/60 hover:text-main-dark">
+              <div className="hidden sm:flex text-white  text-xl font-bold  items-center justify-center size-10 rounded-full bg-cover bg-center border-2 border-white/50 cursor-pointer hover:bg-white/60 hover:text-main-dark">
                 {userData && userData.userName.charAt(0).toUpperCase()}
               </div>
             </Link>
@@ -201,12 +201,21 @@ export default function UserProfile() {
                     </p>
 
                     <div className="mt-3 flex items-center gap-4 text-sm text-white/60">
-                      <div className="flex items-baseline gap-2">
+                      <div className="flex items-baseline gap-2 ">
                         <div className="text-sm font-bold text-white">
                           {articles.length}
                         </div>
                         <div className="text-xs">Articles</div>
                       </div>
+                      {isOwnProfile && (
+                        <div className="flex w-full justify-end mt-5">
+                          <HandleBioUpdate
+                            profileId={profileId}
+                            currentBio={profile.bio || ""}
+                            size={15}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -348,6 +357,7 @@ export default function UserProfile() {
                     <HandleBioUpdate
                       profileId={profileId}
                       currentBio={profile.bio || ""}
+                      size={24}
                     />
                   </div>
                 )}
