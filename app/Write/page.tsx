@@ -34,7 +34,6 @@ const topics = [
 ];
 
 export default function NewPostEditor() {
-  // 2. Initialize React Hook Form
   const {
     register,
     handleSubmit,
@@ -211,7 +210,8 @@ export default function NewPostEditor() {
                 {/* Word Count */}
                 <div className="w-full flex justify-start sm:justify-end px-2">
                   <span className="rounded-2xl text-sm text-secondary sm:block bg-gray-50  px-3 py-2 rounded border border-main-light">
-                    {words} words • {readingMinutes} min read
+                    {words} words •{watchedContent?.trim().length || 0}{" "}
+                    characters •{readingMinutes} min read
                   </span>
                 </div>
                 {publishError && <p> error: {publishError} </p>}

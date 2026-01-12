@@ -35,7 +35,7 @@ export default function UserProfile() {
     <div className="bg-[#0f1110] text-[#e2e8f0] min-h-screen flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-[#0f1110]/90 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between px-10 py-2 sm:py-5">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between px-8 py-2 sm:py-5">
           {/* Left */}
           <div className="flex items-center gap-4 sm:gap-12">
             <Link href="/">
@@ -176,7 +176,7 @@ export default function UserProfile() {
           </motion.div>
         )}
       </AnimatePresence>
-      <main className="max-w-[1440px] mx-auto flex-1 w-full px-10 pt-5 sm:pt-10 relative">
+      <main className="max-w-[1440px] mx-auto flex-1 w-full px-5 pt-5 sm:pt-10 relative">
         <div className="flex flex-col lg:flex-row gap-20">
           {/* Articles Section */}
           <div className="flex-1 order-2 lg:order-1 max-w-[900px]">
