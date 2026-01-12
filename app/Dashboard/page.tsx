@@ -319,8 +319,9 @@ export default function BlogDashboard() {
                     <h2 className="text-xl sm:text-2xl font-bold leading-tight tracking-tight group-hover:text-[#2d5e40] transition-colors text-[#222222] ">
                       {article.title}
                     </h2>
-
-                    <ExpandableContent content={article.content} />
+                    <div className=" text-[#6b6b6b]">
+                      <ExpandableContent content={article.content} />{" "}
+                    </div>
 
                     {/* Footer */}
                     <div className="flex items-center justify-between ">

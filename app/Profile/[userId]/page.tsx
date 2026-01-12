@@ -9,6 +9,7 @@ import { useGetUserProfile } from "@/app/Hooks/UseGetUserProfile";
 import HandleLikes from "@/components/HandleLikes";
 import HandleDeletes from "@/components/HandleDeletes";
 import HandleEdit from "@/components/HandleEdit";
+import ExpandableContent from "@/components/ExpandedContent";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Clock, BookOpen } from "lucide-react";
 import HandleBioUpdate from "@/components/HandleBioUpdate";
@@ -34,7 +35,7 @@ export default function UserProfile() {
     <div className="bg-[#0f1110] text-[#e2e8f0] min-h-screen flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-[#0f1110]/90 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between px-10 py-5">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between px-10 py-2 sm:py-5">
           {/* Left */}
           <div className="flex items-center gap-4 sm:gap-12">
             <Link href="/">
@@ -63,7 +64,7 @@ export default function UserProfile() {
                 </motion.div>
 
                 <motion.span
-                  className="text-2xl font-bold tracking-tight text-primary"
+                  className="text-lg font-bold tracking-tight text-primary"
                   variants={{
                     rest: { scale: 1, color: "inherit" },
                     hover: {
@@ -181,27 +182,27 @@ export default function UserProfile() {
           <div className="flex-1 order-2 lg:order-1 max-w-[900px]">
             <div className="mb-4">
               {profile && (
-                <h1 className="text-2xl sm:text-4xl font-bold tracking-tight mb-3">
+                <h1 className="text-xl sm:text-4xl font-bold tracking-tight mb-3">
                   {profile.userName}
                 </h1>
               )}
 
-              <div className="lg:hidden bg-white/3 border border-white/6 rounded-xl p-3">
-                <div className="flex items-center gap-4">
+              <div className="sm:hidden bg-white/3 border border-white/6 rounded-xl p-3">
+                <div className="flex  gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center bg-[#1c2e22] text-white text-2xl md:text-3xl font-bold border-2 border-[#4ade80]/30">
+                    <div className="w-10 h-10 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-[#1c2e22] text-white text-xl md:text-3xl font-bold border-2 border-[#4ade80]/30">
                       {profile ? profile.userName.charAt(0).toUpperCase() : "U"}
                     </div>
                   </div>
 
                   <div className="flex-1">
-                    <p className="text-sm text-white/60 mt-1 line-clamp-2">
+                    <p className="text-xs text-white/60 mt-1 line-clamp-2">
                       {profile?.bio || "No bio yet."}
                     </p>
 
                     <div className="mt-3 flex items-center gap-4 text-sm text-white/60">
                       <div className="flex items-baseline gap-2">
-                        <div className="text-base font-bold text-white">
+                        <div className="text-sm font-bold text-white">
                           {articles.length}
                         </div>
                         <div className="text-xs">Articles</div>
@@ -241,10 +242,9 @@ export default function UserProfile() {
                       className="group bg-white/2 p-6 rounded-xl"
                     >
                       <div className="flex flex-col gap-4">
-                        <div className="flex items-center gap-3 text-sm font-bold text-main-light/60 uppercase tracking-[0.2em]">
-                          <span>{article.topics?.join(", ")}</span>
+                        <div className="flex items-center gap-3 text-xs font-bold text-main-light/80  tracking-[0.2em]">
                           <span className="text-white/20">•</span>
-                          <span className="text-white/50">
+                          <span className="text-white/50 font-heading">
                             {article.createdAt
                               ?.toDate()
                               .toLocaleDateString(undefined, {
@@ -257,18 +257,21 @@ export default function UserProfile() {
                           </span>
                         </div>
 
-                        <h3 className="text-3xl lg:text-4xl font-bold group-hover:text-[#4ade80] transition-colors leading-tight">
+                        <h3 className="text-xl sm:text-4xl font-bold group-hover:text-[#4ade80] transition-colors leading-tight">
                           {article.title}
                         </h3>
 
-                        <p className="text-white/60 line-clamp-3">
-                          {article.content}
-                        </p>
+                        <div className="text-white/60 line-clamp-3 text-xs sm:text-lg">
+                          <ExpandableContent content={article.content} />
+                        </div>
+                        <span className="text-sm text-white/70">
+                          {article.topics?.join(", ")}
+                        </span>
 
-                        <div className="flex items-center justify-between pt-6">
+                        <div className="flex items-center justify-between pt-0 sm:pt-6">
                           <div className="flex items-center  text-sm text-white/40 ">
                             <span className="flex items-center gap-2">
-                              <Clock className="size-5" />
+                              <Clock className="size-4 sm:size-5" />
                               {article.createdAt?.toDate().toLocaleDateString()}
                             </span>
                           </div>
@@ -302,7 +305,7 @@ export default function UserProfile() {
                         </div>
                       </div>
 
-                      <div className="border-b border-white/5 mt-6" />
+                      <div className="border-b border-white/5 mt-0 sm:mt-6" />
                     </motion.article>
                   ))
                 )}
@@ -311,41 +314,43 @@ export default function UserProfile() {
           </div>
 
           {/* Sidebar */}
-          <aside className="hidden lg:block w-[400px] order-2 sticky top-16 h-fit pl-6 lg:pl-10">
+          <aside className="hidden sm:block w-[400px] order-2 sticky top-16 h-fit pl-6 lg:pl-10">
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               className="bg-white/3 rounded-xl p-6 border border-white/10 shadow-sm"
             >
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col items-center gap-2">
                 <motion.div
                   initial={{ scale: 0.98 }}
                   animate={{ scale: 1 }}
                   whileHover={{ scale: 1.02 }}
                   role="img"
                   aria-label={profile ? `${profile.userName} avatar` : "avatar"}
-                  className="w-36 h-36 rounded-full flex items-center justify-center bg-[#1c2e22] text-white text-6xl font-bold border-2 border-[#4ade80]/30 p-1.5"
+                  className="w-15 h-15 rounded-full flex items-center justify-center bg-[#1c2e22] text-white text-3xl font-bold border-2 border-[#4ade80]/30 p-1.5"
                 >
                   {profile ? profile.userName.charAt(0).toUpperCase() : "U"}
                 </motion.div>
 
-                <div className="flex-1">
+                <div className="flex-1 flex flex-col text-center justify-center items-center ">
                   <h4 className="text-xl font-bold text-white">
                     {profile?.userName}
                   </h4>
-                  <p className="text-sm text-white/60 mt-1 line-clamp-3">
-                    {profile?.bio ||
-                      "No bio yet. This user hasn't added a bio."}
-                  </p>
-                  {isOwnProfile && (
-                    <div className="flex w-full justify-end mt-5">
-                      <HandleBioUpdate
-                        profileId={profileId}
-                        currentBio={profile.bio || ""}
-                      />
-                    </div>
-                  )}
+
+                  <div className="text-sm text-white/60 mt-1 line-clamp-3 text-center">
+                    <ExpandableContent
+                      content={profile?.bio || "No bio yet. "}
+                    />
+                  </div>
                 </div>
+                {isOwnProfile && (
+                  <div className="flex w-full justify-end mt-5">
+                    <HandleBioUpdate
+                      profileId={profileId}
+                      currentBio={profile.bio || ""}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="mt-6 flex items-center justify-start gap-6">
@@ -360,7 +365,7 @@ export default function UserProfile() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white/5 py-5 sm:py-8 pb-5 border-t border-white/5 ">
+      <footer className="bg-white/5 py-5 sm:py-8 pb-5 border-t border-white/5 mt-5">
         <div className="max-w-[1440px] mx-auto px-10">
           <div className="flex flex-col sm:flex-row items-center justify-center text-center sm:justify-between gap-5 sm:gap-12">
             <Link href="/">
@@ -385,11 +390,11 @@ export default function UserProfile() {
                   }}
                   className="text-white flex items-center justify-center"
                 >
-                  <BookOpen size={30} />
+                  <BookOpen className="size-5 sm:size-7" />
                 </motion.div>
 
                 <motion.span
-                  className="text-2xl font-bold tracking-tight text-primary"
+                  className="text-lg sm:text-2xl font-bold tracking-tight text-primary"
                   variants={{
                     rest: { scale: 1, color: "inherit" },
                     hover: {
@@ -403,18 +408,6 @@ export default function UserProfile() {
                 </motion.span>
               </motion.div>
             </Link>
-
-            <div className="flex flex-wrap justify-center gap-10 text-sm  text-white/50">
-              {footerLinks.map((link) => (
-                <Link
-                  key={link}
-                  href="#"
-                  className="hover:text-[#4ade80] transition-colors"
-                >
-                  {link}
-                </Link>
-              ))}
-            </div>
 
             <p className="text-sm text-white/30 ">
               © 2025 Social Medium by Mohamed Megahed Designed for reading.

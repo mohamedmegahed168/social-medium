@@ -34,7 +34,7 @@ export default function HandleLikes({
         ${
           isLiked
             ? "text-[#17cf54] bg-[#17cf54]/20"
-            : "text-gray-500 hover:text-[#17cf54] hover:bg-[#17cf54]/10"
+            : "text-inherit hover:text-[#17cf54] hover:bg-[#17cf54]/10"
         }
       `}
     >

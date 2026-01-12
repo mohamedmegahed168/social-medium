@@ -34,7 +34,7 @@ function ExpandableContent({ content }: ContentData) {
       >
         <p
           ref={contentRef}
-          className={`text-[#6b6b6b] text-md leading-relaxed transition-all duration-300 ${
+          className={`text-inherit text-md leading-relaxed transition-all duration-300 ${
             isExpanded ? "" : "line-clamp-2"
           }`}
         >
